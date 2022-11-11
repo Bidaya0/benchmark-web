@@ -1,0 +1,719 @@
+.module {
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 2px;
+
+  .module-label {
+    width: 100%;
+    height: 48px;
+    background: #fcfcfc;
+    box-shadow: inset 0px -1px 0px #f0f0f0;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+
+    strong {
+      color: #f11f1f;
+      font-weight: unset;
+      margin: 0 2px;
+    }
+  }
+
+  .module-content {
+    background: #ffffff;
+  }
+}
+.el-dialog__body {
+  padding-top: 16px !important;
+  padding-bottom: 0 !important;
+}
+.el-main {
+  overflow: visible;
+}
+
+.el-pagination {
+  font-weight: normal;
+}
+
+.asr-highlight-em{
+  background-color: #FECD1F;
+}
+
+.assets-blue-theme-table {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #e2ecf7;
+  border-bottom: none;
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #f0f8ff !important;
+    color: #181818;
+    font-weight: 500;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #333;
+    z-index: inherit;
+  }
+
+  td.el-table__cell,
+  th.el-table__cell.is-leaf {
+    border-bottom: 1px solid #e2ecf7 !important;
+  }
+
+  .el-table__cell,
+  .el-table__body-wrapper .is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid #e2ecf7 !important;
+  }
+}
+
+.assets-red-theme-table {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid #f1e4e4;
+  border-bottom: none;
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #ffefef !important;
+    color: #181818;
+    font-weight: 500;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #333;
+  }
+
+  td.el-table__cell,
+  th.el-table__cell.is-leaf {
+    border-bottom: 1px solid #f1e4e4 !important;
+  }
+
+  .el-table__cell,
+  .el-table__body-wrapper .is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid #f1e4e4 !important;
+  }
+}
+.assets-grey-theme-table {
+  width: 100%;
+  margin-top: 8px;
+  // border: 1px solid #f1e4e4;
+  border-bottom: none;
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #F6F6F6 !important;
+    color: #181818;
+    font-weight: 500;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #333;
+  }
+
+  td.el-table__cell,
+  th.el-table__cell.is-leaf {
+    // border-bottom: 0px solid #f1e4e4 !important;
+  }
+
+  .el-table__cell,
+  .el-table__body-wrapper .is-scrolling-left ~ .el-table__fixed {
+    // border-right: 0px solid #f1e4e4 !important;
+  }
+}
+
+.auth-gray-theme-table {
+  width: 100%;
+  margin-top: 16px;
+  border: 1px solid #f2f2f2;
+  border-bottom: none;
+
+  &::before {
+    height: 0;
+  }
+  &::after {
+    width: 0;
+  }
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #f4f4f4 !important;
+    color: #181818;
+    font-weight: 500;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #333;
+  }
+
+  td.el-table__cell,
+  th.el-table__cell.is-leaf {
+    border-bottom: 1px solid #f2f2f2 !important;
+  }
+
+  .el-table__cell,
+  .el-table__body-wrapper .is-scrolling-left ~ .el-table__fixed {
+    border-right: 1px solid #f2f2f2 !important;
+  }
+}
+.auth-gray-theme-table1 {
+  width: 100%;
+  margin-top: 16px;
+  border-bottom: none;
+
+  &::before {
+    height: 0;
+  }
+  &::after {
+    width: 0;
+  }
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #f4f4f4 !important;
+    color: #181818;
+    font-weight: 500;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #171B23;
+  }
+}
+.auth-gray-theme-table-behind {
+  width: 100%;
+  margin-top: 16px;
+  border-bottom: none;
+
+  &::before {
+    height: 0;
+  }
+  &::after {
+    width: 0;
+  }
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    font-family: 'PingFang SC';
+    font-style: normal;
+    background: #F2F3F5 !important;
+    color: #434C5B;
+    font-weight: 500;
+    font-size: 14px;
+    height: 44px;
+  }
+
+  td.el-table__cell {
+    color: #171B23;
+  }
+}
+
+.search-corp-el-table {
+  &::before {
+    height: 0;
+  }
+  &::after {
+    width: 0;
+  }
+
+  &::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+  &::after {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__inner-wrapper::before {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .el-table__border-left-patch {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  th.el-table__cell {
+    background: #fcfcfc !important;
+    color: #666666;
+    font-weight: 500;
+    height: 48px;
+  }
+
+  td.el-table__cell {
+    color: #333;
+    padding: 12px 0;
+  }
+
+  .logo {
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+  }
+  .name {
+    color: #2878ff;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    overflow: hidden;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .el-table__body tr:hover > td.el-table__cell {
+    .blueHoverBg{
+      background: #2878ff;
+    }
+
+    .redHoverBg{
+      background: #FF5A5A;
+    }
+
+    .waveBg {
+      position: absolute;
+      top: calc((100% - 4px) / 2);
+      left: calc((100% - 4px) / 2);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      opacity: 0.2;
+      background-size: auto 100%;
+      animation: wave 2.5s infinite;
+    }
+
+    @keyframes wave {
+      0% {
+        top: calc((100% - 4px) / 2);
+        left: calc((100% - 4px) / 2);
+        width: 4px;
+        height: 4px;
+      }
+      100% {
+        top: calc((100% - 44px) / 2);
+        left: calc((100% - 44px) / 2);
+        width: 44px;
+        height: 44px;
+        z-index: 100;
+      }
+    }
+  }
+}
+.el-popper{
+  max-width: 800px;
+}
+
+.el-select{
+  .el-input__inner:focus {
+    box-shadow: 0 0 0 1px #0058F0 inset!important;
+  }
+  .el-select-dropdown__item.selected {
+    color: #0058F0;
+    font-weight: 700;
+  }
+  .select-trigger.el-tooltip__trigger{
+    .is-focus{
+      .el-input__inner{
+        box-shadow: 0 0 0 1px #0058F0 inset!important;
+      }
+    }
+  }
+}
+// input 的placeholder
+.el-input__inner {
+  // letter-spacing:2px;
+  &::placeholder {
+      color: #7D8695 !important;
+  }
+  &::-webkit-input-placeholder {
+      /* WebKit browsers 适配⾕歌 */
+      color: #7D8695 !important;
+  }
+  &:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 适配⽕狐 */
+      color: #7D8695 !important;
+  }
+  &::-moz-placeholder {
+      /* Mozilla Firefox 19+ 适配⽕狐 */
+      color: #7D8695 !important;
+  }
+  &:-ms-input-placeholder {
+      /* Internet Explorer 10+  适配ie*/
+      color: #7D8695 !important;
+  }
+}
+
+.el-input__suffix-inner{
+  color: #7D8695;
+}
+.el-select__icon{
+  color: #7D8695 !important;
+}
+
+// deleteRight 删除提示框公共样式
+.deleteRight{
+  .el-popconfirm__main{
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    .el-icon{
+      font-size: 20px;
+      margin-left: 13px;
+      margin-right: 18px;
+    }
+  }
+  .el-popconfirm__action{
+    margin: 16px 4px 16px 0;
+    .el-button--text{
+      background: #F2F3F5;
+      border-radius: 2px;
+      padding: 5px 16px;
+      font-family: 'PingFang SC';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      color: #434C5B;
+      line-height: 22px;
+      height: 32px;
+    }
+    .el-button--primary{
+      padding: 5px 16px;
+      background: #0058F0;
+      border-radius: 2px;
+      height: 32px;
+    }
+  }
+}
+
+.el-select .el-input__inner:focus {
+  box-shadow: 0 0 0 1px #0058F0 inset!important;
+}
+// someDialogClass 对话框公共样式
+.someDialogClass{
+  .el-dialog__header{
+    margin: 0 16px;
+    padding-left: 0;
+    border-bottom: 1px solid #E5E6EB!important;
+  }
+  .el-dialog__close{
+    color: #434C5B;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .el-button--default{
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #F2F3F5;
+    color: #4E5969;
+    border-radius: 2px;
+  }
+  .el-button--primary{
+    color: #FFFFFF;
+    border-color: #F2F3F5;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #0058F0;
+    border-radius: 2px;
+  }
+  .el-button--danger{
+    color: #F53F3F;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #fff;
+    border: 1px solid #F53F3F;
+    border-radius: 2px;
+  }
+  .el-button--default:focus, .el-button--default:hover {
+    color: #4E5969;
+    border-color: #F2F3F5;
+    background-color: #F2F3F5;
+    border-radius: 2px;
+  }
+  .el-button--danger:focus, .el-button--danger:hover {
+    color: #F53F3F;
+    background-color: #fff;
+    border: 1px solid #F53F3F;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+ .el-button--primary:hover {
+    color: #FFFFFF;
+    border-color: #F2F3F5;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background: #2C7CF3;
+    border-radius: 2px;
+  }
+  .el-button--primary:focus{
+    color: #FFFFFF;
+    border-color: #F2F3F5;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: #0058F0;
+    border-radius: 2px;
+  }
+  .el-select__icon{
+    color: #4E5969!important;
+  }
+  
+}
+.el-button.is-disabled{
+  background: #94BFFF;
+  border-radius: 2px;
+}
+
+// 
+.el-select-dropdown__item.selected {
+  color: #0058F0 !important;
+  font-weight: 600;
+}
+.el-select-dropdown__item{
+  font-weight: 400;
+}
+
+
+// 按钮的通用样式
+// 后台
+.button-back-btn{
+  height: 32px;
+  margin-left: 8px;
+  padding: 0px 16px;
+  background: #0058F0;
+  border-radius: 2px;
+  line-height: 32px;
+  color: #FFFFFF;
+  &:hover{
+    background: #2C7CF3;
+  }
+  &:active{
+    background: #0042C7;
+  }
+}
+// 次级按钮
+.button-back-btn1{
+  height: 32px;
+  margin-left: 8px;
+  padding: 0px 16px;
+  background: #F2F3F5;
+  border-radius: 2px;
+  line-height: 32px;
+  color: #434C5B !important;
+  &:hover{
+    background: #E5E6EB !important;
+  }
+  &:active{
+    background: #C9CDD4 !important;
+  }
+}
+// 文字按钮
+.button-back-text{
+  font-size: 14px;
+  line-height: 32px;
+  color: #0058F0;
+  padding: 0px 16px;
+  background: transparent;
+  &:hover{
+    background: #F2F3F5;
+    border-radius: 2px;
+  }
+  &:active{
+    background: #E5E6EB;
+    border-radius: 2px;
+  }
+}
+
+// 文字按钮
+.button-back-img{
+  font-size: 14px;
+  line-height: 32px;
+  color: #0058F0;
+  padding: 0px 10px;
+  background: transparent;
+  &:hover{
+    background: #F2F3F5;
+    border-radius: 2px;
+  }
+  &:active{
+    background: #E5E6EB;
+    border-radius: 2px;
+  }
+}
+
+.el-loading-text{
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px !important;
+  line-height: 22px;
+  color: #171B23 !important;
+}
+.el-loading-mask > .el-loading-spinner>.icon-jiazaizhong{
+  animation: rotating 0.8s linear infinite ;
+  /* color: rgb(20, 15, 88); */
+  display: inline-block;
+}
+// el-select el-input 交互样式
+
+// 自定义动图加载 loading 等待动图中
+// .el-loading-spinner{
+//   /*这个是自己想设置的 gif 加载动图*/
+//   background-image:url('@/assets/images/logo.png');
+//   background-repeat: no-repeat;
+//   background-size: 200px 120px;
+//   height:120px;
+//   width:100%;
+//   background-position:center;
+//   /*覆盖 element-ui  默认的 50%    因为此处设置了height:100%,所以不设置的话，会只显示一半，因为被top顶下去了*/
+//   top:40%;
+// }
+// .el-loading-spinner .circular {
+//   /*隐藏 之前  element-ui  默认的 loading 动画*/
+ 
+//   display: none;
+ 
+// }
+
+// .el-loading-spinner .el-loading-text{
+//   /*为了使得文字在loading图下面*/
+//   margin:150px 0px;
+// }
+// pre换行
+pre {
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+ }

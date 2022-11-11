@@ -1,0 +1,208 @@
+kind: pipeline
+name: asr-dist-fe-pipeline
+type: docker
+
+steps:
+  # 开始通知
+  - name: notify-start
+    image: plugins/webhook
+    settings:
+      urls:
+        from_secret: feishu_xiaolaba_notify_url
+      content_type: application/json
+      template: |
+        {
+        "title": "${DRONE_BUILD_NUMBER}.部署开始！ {{ repo.name }}:{{ build.branch }}",
+        "text": "提交人: ${DRONE_COMMIT_AUTHOR} \n备注: ${DRONE_COMMIT_MESSAGE//"/} \n行为: {{ build.event }} \n提交SHA: ${DRONE_COMMIT_SHA:0:8} \nURL: {{ build.link }}"
+        }
+    when:
+      status:
+        - failure
+        - success
+
+
+# 获取缓存
+  - name: restore-cache
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: cache
+        path: /cache
+    settings:
+      restore: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+  # 安装依赖
+  - name: npm-install
+    image: node:14
+    commands:
+      - npm config set cache ./.npm-cache --global
+      - npm install
+      # - yarn
+
+  # 构建dist
+  - name: build-dist
+    image: node:14
+    commands:
+      - yarn run build
+
+  # 保存缓存
+  - name: rebuild-cache # 把依赖和 npm 缓存放到缓存里
+    image: drillster/drone-volume-cache
+    settings:
+      rebuild: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+    volumes:
+      - name: cache
+        path: /cache
+
+
+
+
+  # 构建pre镜像
+  - name: build-pre
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: aliyun_dockerhub_username
+      password:
+        from_secret: aliyun_dockerhub_password
+      repo: registry-vpc.cn-beijing.aliyuncs.com/secnium/asr-dist-fe
+      registry:
+        from_secret: aliyun_dockerhub_registry
+      use_cache: true
+      cache_from:
+        - registry-vpc.cn-beijing.aliyuncs.com/secnium/asr-dist-fe:latest_pre
+      mirror: http://hub-mirror.c.163.com
+      tags:
+        - latest_pre
+        - 0.1.${DRONE_BUILD_NUMBER}
+    when:
+      branch:
+        - pre
+
+  # 部署pre环境
+  - name: deliver-pre
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: huoqi_ask_prod_server
+      kubernetes_cert:
+        from_secret: huoqi_ask_pre_cert
+      kubernetes_token:
+        from_secret: huoqi_ask_pre_token
+    commands:
+      - find deploy/pre/deploy-*-pre.yml -type f -exec sed -i 's/VERSION/0.1.${DRONE_BUILD_NUMBER}/g' {} \;
+      - ls deploy/pre/deploy-*-pre.yml | xargs -I {} kubectl apply -f {}
+    when:
+      branch:
+        - pre
+
+  # 构建prod镜像
+  - name: build-prod
+    image: plugins/docker
+    settings:
+      insecure: true
+      username:
+        from_secret: aliyun_dockerhub_username
+      password:
+        from_secret: aliyun_dockerhub_password
+      repo: registry-vpc.cn-beijing.aliyuncs.com/secnium/asr-dist-fe
+      registry:
+        from_secret: aliyun_dockerhub_registry
+      mirror: http://hub-mirror.c.163.com
+      use_cache: true
+      tags:
+        - latest
+        - 0.1.${DRONE_BUILD_NUMBER}
+    when:
+      branch:
+        - master
+
+  # 部署prod环境
+  - name: deliver-prod
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: huoqi_ask_prod_server
+      kubernetes_cert:
+        from_secret: huoqi_ask_prod_cert
+      kubernetes_token:
+        from_secret: huoqi_ask_prod_token
+    commands:
+      - find deploy/prod/deploy-*-prod.yml -type f -exec sed -i 's/VERSION/0.1.${DRONE_BUILD_NUMBER}/g' {} \;
+      - ls deploy/prod/deploy-*-prod.yml | xargs -I {} kubectl apply -f {}
+    when:
+      branch:
+        - master
+
+  # 构建develop镜像
+  - name: build-develop
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: aliyun_dockerhub_username
+      password:
+        from_secret: aliyun_dockerhub_password
+      repo: registry-vpc.cn-beijing.aliyuncs.com/secnium/asr-dist-fe
+      registry:
+        from_secret: aliyun_dockerhub_registry
+      use_cache: true
+      mirror: http://hub-mirror.c.163.com
+      cache_from:
+        - registry-vpc.cn-beijing.aliyuncs.com/secnium/asr-dist-fe:latest_develop
+      tags:
+        - latest_develop
+        - 0.1.${DRONE_BUILD_NUMBER}
+    when:
+      branch:
+        - develop
+
+  # 部署develop环境
+  - name: deliver-develop
+    image: sinlead/drone-kubectl
+    settings:
+      kubernetes_server:
+        from_secret: huoqi_ask_test_server
+      kubernetes_cert:
+        from_secret: huoqi_ask_test_cert
+      kubernetes_token:
+        from_secret: huoqi_ask_test_token
+    commands:
+      - find deploy/develop/deploy-*-develop.yml -type f -exec sed -i 's/VERSION/0.1.${DRONE_BUILD_NUMBER}/g' {} \;
+      - ls deploy/develop/deploy-*-develop.yml | xargs -I {} kubectl apply -f {}
+    when:
+      branch:
+        - develop
+  # 结束通知
+  - name: notify-end
+    image: plugins/webhook
+    settings:
+      urls:
+        from_secret: feishu_xiaolaba_notify_url
+      content_type: application/json
+      template: |
+        {
+        "title": "${DRONE_BUILD_NUMBER}.部署完成！ {{ repo.name }}:{{ build.branch }}",
+        "text": "构建状态: {{build.status}} \n提交人: ${DRONE_COMMIT_AUTHOR} \n备注: ${DRONE_COMMIT_MESSAGE//"/} \n行为: {{ build.event }} \n提交SHA: ${DRONE_COMMIT_SHA:0:8} \nURL: {{ build.link }}"
+        }
+    when:
+      status:
+        - failure
+        - success
+
+volumes:
+  - name: cache
+    host:
+      path: /data/cache
+
+trigger:
+  branch:
+    - master
+    - pre
+    - develop
+  event:
+    - push
+    - tag
