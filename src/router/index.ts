@@ -10,16 +10,25 @@ const routes: Array<RouteRecordRaw> = [
     path: '/home',
     name: 'home',
     component: () => import('@/views/home/index.vue'),
-  },
-  {
-    path: '/lazy',
-    name: 'lazy',
-    component: () => import('@/views/lazy/lazy.vue'),
-  },
-  {
-    path: '/d3three',
-    name: 'd3three',
-    component: () => import('@/views/d3three/index.vue'),
+    redirect: '/index',
+    children: [
+      {
+        path: '/index',
+        name: 'index',
+        meta: {
+          name: 'index',
+        },
+        component: () => import('@/views/home/layouts/index.vue'),
+      },
+      {
+        path: '/instructions',
+        name: 'instructions',
+        meta: {
+          name: 'instructions',
+        },
+        component: () => import('@/views/home/instructions/index.vue'),
+      },
+    ],
   },
   {
     path: '/code',
