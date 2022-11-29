@@ -124,7 +124,114 @@
         </div>
       </div>
     </div>
-    <div>第三步表格</div>
+    <div class="table_three">
+      <div class="select">
+        <div class="KeepCpu">
+          <span>
+            Keep CPU Usage over
+          </span>
+          <div class="baifenbi">
+            <el-input
+              v-model="cpuNum"
+              type="number"
+            />%
+          </div>
+          <el-switch
+            v-model="cpuValue"
+            class="ml-2"
+            style="--el-switch-on-color: #13ce66;"
+          />
+          <span>{{ cpuValue?'开启':'关闭' }}</span>
+        </div>
+        <div class="KeepCpu">
+          <span>
+            Keep Mem Usage over
+          </span>
+          <div class="baifenbi">
+            <el-input
+              v-model="memNum"
+              type="number"
+            />%
+          </div>
+          <el-switch
+            v-model="memValue"
+            class="ml-2"
+            style="--el-switch-on-color: #13ce66;"
+          />
+          <span>{{ memValue?'开启':'关闭' }}</span>
+        </div>
+      </div>
+      <div class="table">
+        <el-table
+          :data="operationList"
+          min-height="calc(100% - 0.53rem)"
+          width="100%"
+          class="assets-grey-theme-table"
+        >
+          <el-table-column
+            prop="id"
+            label="ID"
+            :width="300"
+            show-overflow-tooltip
+          >
+            <template #default="{ row, $index }">
+              <span
+                class="name-input"
+                style="display: flex;align-items: center;cursor: pointer;"
+              >
+                <span
+                  :id="'input'+$index"
+                  class="id"
+                  style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+                >{{ row.title }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="url"
+            label="操作"
+            fit
+          >
+            <template #default="{ row }">
+              <span
+                style="display: flex;align-items: center;"
+              >
+                <span :class="`Severity_${row.severity}`">{{ row.severity }}</span>
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            prop="date"
+            label="时间"
+            :width="300"
+          >
+            <template #default="{ row }">
+              <span style="display: flex;align-items: center">
+                {{ row.date }}
+              </span>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <div
+              class="empty-box"
+            >
+              <div class="title">
+                no Data
+              </div>
+            </div>
+          </template>
+        </el-table>
+        <el-pagination
+          :total="operationTotal"
+          :page-size="operationObj.pagesize"
+          :current-page="operationObj.page"
+          layout="prev, pager, next"
+          style="margin: 8px;display: flex;justify-content: end;"
+          @current-change="handleoperationPageChange"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -135,17 +242,35 @@ import {
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
 
+const cpuValue = ref<any>(true)
+const memValue = ref<any>(true)
+const cpuNum = ref<any>(50)
+const memNum = ref<any>(50)
 const loopholeList = ref<any>([])
 const loopholeTotal = ref<any>(0)
 const loopholeObj = reactive<any>({
   pagesize: 10,
   page: 1,
 })
+const operationList = ref<any>([])
+const operationTotal = ref<any>(0)
+const operationObj = reactive<any>({
+  pagesize: 10,
+  page: 1,
+})
+const handleoperationPageChange = (val:any) => {
+  operationObj.page = val
+  getoperationList()
+}
+
 const handleloopholePageChange = (val:any) => {
   loopholeObj.page = val
   getloopholeList()
 }
 const getloopholeList = async () => {
+
+}
+const getoperationList = async () => {
 
 }
 
@@ -208,6 +333,46 @@ onMounted(() => {
               width:100%;
               padding: 16px;
               box-sizing: border-box;
+            }
+          }
+        }
+      }
+      .table_three{
+        margin-top: 24px;
+        margin-bottom: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        .select{
+          display: flex;
+          align-items: center;
+          padding:0 24px;
+          gap: 16px;
+          >div{
+            flex: 1;
+          }
+        }
+        .KeepCpu{
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          .baifenbi{
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            :deep(.el-input){
+              border: none;
+              box-shadow: none;
+              height: 30px;
+              .el-input__wrapper{
+                border: none;
+                box-shadow: none;
+                height: 30px;
+                width: 60px;
+              }
             }
           }
         }

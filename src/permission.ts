@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth';
 import store from '@/store';
 
 const permissions = store.getters && store.getters.permissions
-const whiteList: string[] = ['layout', 'echarts', 'upload', 'instructions', 'index', 'd3three', 'code', 'lazy', 'vip', 'searchList', 'company', 'novip', 'org', 'relationMap', 'scatterMap', 'join', 'home'];
+const whiteList: string[] = ['layout', 'sql', 'echarts', 'upload', 'instructions', 'index', 'd3three', 'code', 'lazy', 'vip', 'searchList', 'company', 'novip', 'org', 'relationMap', 'scatterMap', 'join', 'home'];
 const accessRoutes:any[] = [
   // {
   //   path: 'configurationBoot',
