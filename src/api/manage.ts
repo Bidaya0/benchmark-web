@@ -12,3 +12,21 @@ export const messageLogDisplay: requestModel = (params:any) => request.get(`/man
 // 获取操作列表总数 /managerment/manage/log_count
 export const messageLogcount: requestModel = (params:any) => request.get('/managerment/manage/log_count');
 // 修改状态 /managerment/manage/changeload
+export const messageChangeload: requestModel = (params:any) => request.post('/managerment/manage/changeload');
+
+// sql 2
+// list /vulforcheck/002/generateMessage
+export const generateMessage: requestModel = (params:any) => request.get(`/vulforcheck/002/generateMessage?page=${params.page}&pagesize=${params.pageSize}`);
+// del
+export const logicExecMessage: requestModel = (params:any) => request.get(`/vulforcheck/002/logicExec?id=${params.id}`);
+
+// sql3
+export const logicExec3Message: requestModel = (params:any) => request.get('/vulforcheck/003/logicExec');
+
+// sql1 list  /vulforcheck/001/dataDisplay
+export const dataDisplayMessage: requestModel = (params:any) => request.get(`/vulforcheck/001/dataDisplay?page=${params.page}&pageSize=${params.pageSize}`);
+export const dataDisplayCountMessage: requestModel = (params:any) => request.get('/vulforcheck/001/dataDisplayCount');
+// 生成内容 vulforcheck/001/generateMessage
+export const sqlMessage: requestModel = (params:any) => request.get('/vulforcheck/001/generateMessage');
+// save vulforcheck/001/logicExec
+export const sql1LogicExec: requestModel = (params:any) => request.get(`/vulforcheck/001/logicExec?title=${params.title}&context=${params.context}`);

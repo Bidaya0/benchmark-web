@@ -3,9 +3,201 @@
     <div class="searchConnections_Upgrade">
       <div class="black" />
       <i class="iconfont icon-Vector" />
-      <span>操作指引：通过以下任一方式访问链接即可.</span>
+      <span v-show="sqlType===1">操作指引：点击“生成内容”，生成数据，点击“保存”添加数据.</span>
+      <span v-show="sqlType===2">操作指引：点击页面可点击的“删除”按钮，删除部分数据.</span>
+      <span v-show="sqlType===3">操作指引：通过以下任一方式访问链接即可.</span>
     </div>
-    <div class="content_index">
+    <div
+      v-show="sqlType===1"
+      class="content_index"
+    >
+      <div class="title">
+        <span>标题：</span>
+        <el-input
+          v-model="title"
+          disabled
+        />
+      </div>
+      <div class="content1">
+        <span>内容：</span>
+        <el-input
+          v-model="textarea"
+          type="textarea"
+          :autosize="{ minRows: 6, maxRows: 10 }"
+          disabled
+        />
+      </div>
+      <div class="button_content">
+        <button
+          class="button-back-btn1"
+          @click="getsqlMessage"
+        >
+          生成内容
+        </button>
+        <button
+          :style="!title?'cursor: no-drop;':''"
+          class="button-back-btn"
+          @click="saveMessage"
+        >
+          保存
+        </button>
+      </div>
+      <div class="table">
+        <span />
+        <el-table
+          :data="operationList"
+          min-height="calc(100% - 0.53rem)"
+          width="100%"
+          class="assets-grey-theme-table"
+        >
+          <el-table-column
+            prop="id"
+            label="ID"
+            :width="300"
+            show-overflow-tooltip
+          >
+            <template #default="{ row, $index }">
+              <span
+                class="name-input"
+                style="display: flex;align-items: center;cursor: pointer;"
+              >
+                <span
+                  :id="'input'+$index"
+                  class="id"
+                  style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+                >{{ row.id }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="title"
+            label="标题"
+            :width="300"
+          >
+            <template #default="{ row }">
+              <span
+                style="display: flex;align-items: center;"
+              >
+                <span>{{ row.title }}</span>
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            prop="context"
+            label="内容"
+            fit
+          >
+            <template #default="{ row }">
+              <span style="display: flex;align-items: center">
+                {{ row.context }}
+              </span>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <div
+              class="empty-box"
+            >
+              <div class="title">
+                no Data
+              </div>
+            </div>
+          </template>
+        </el-table>
+        <el-pagination
+          :total="operationTotal"
+          :page-size="operationObj.pagesize"
+          :current-page="operationObj.page"
+          layout="prev, pager, next"
+          style="margin: 8px;display: flex;justify-content: end;"
+          @current-change="handleoperationPageChange"
+        />
+      </div>
+    </div>
+    <div
+      v-show="sqlType===2"
+      class="content_index"
+    >
+      <div class="table">
+        <span />
+        <el-table
+          :data="operation2List"
+          min-height="calc(100% - 0.53rem)"
+          width="100%"
+          class="assets-grey-theme-table"
+        >
+          <el-table-column
+            prop="title"
+            label="标题"
+            :width="300"
+            show-overflow-tooltip
+          >
+            <template #default="{ row, $index }">
+              <span
+                class="name-input"
+                style="display: flex;align-items: center;cursor: pointer;"
+              >
+                <span
+                  :id="'input'+$index"
+                  class="id"
+                  style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+                >{{ row.title }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="context"
+            label="内容"
+            fit
+          >
+            <template #default="{ row }">
+              <span
+                style="display: flex;align-items: center;"
+              >
+                <span :class="`Severity_${row.severity}`">{{ row.context }}</span>
+              </span>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            prop="content"
+            label="操作"
+            :width="300"
+          >
+            <template #default="{ row }">
+              <span style="display: flex;align-items: center">
+                <span
+                  class="delrow"
+                  @click="sql2Del(row)"
+                >删除</span>
+              </span>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <div
+              class="empty-box"
+            >
+              <div class="title">
+                no Data
+              </div>
+            </div>
+          </template>
+        </el-table>
+        <el-pagination
+          :total="operation2Total"
+          :page-size="operation2Obj.pagesize"
+          :current-page="operation2Obj.page"
+          layout="prev, pager, next"
+          style="margin: 8px;display: flex;justify-content: end;"
+          @current-change="handleoperation2PageChange"
+        />
+      </div>
+    </div>
+    <div
+      v-show="sqlType===3"
+      class="content_index"
+      style="border: 1px solid #ccc;"
+    >
       <VMdEditor
         v-model="WebhooksPayload"
         mode="preview"
@@ -17,7 +209,7 @@
 
 <script setup lang="ts">
 import {
-  onMounted, reactive, ref, markRaw,
+  onMounted, reactive, ref, markRaw, watch,
 } from 'vue' // introjs主题
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor'
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css'
@@ -48,10 +240,13 @@ import 'codemirror/lib/codemirror.css'
 
 // highlightjs
 import hljs from 'highlight.js'
+import { useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import {
+  dataDisplayCountMessage,
+  dataDisplayMessage, generateMessage, logicExec3Message, logicExecMessage, sql1LogicExec, sqlMessage,
+} from '@/api/manage'
 
-const randerEchart = async () => {
-
-}
 const WebhooksPayload = ref<any>(`
   * [aws\\_redshift\\_event\\_subscriptions](https://github.com/selefra/selefra-provider-aws/blob/main/docs/tables/aws\\_redshift\\_event\\_subscriptions.md)
 `)
@@ -59,12 +254,121 @@ VMdEditor.Codemirror = Codemirror
 VMdEditor.use(githubTheme, {
   Hljs: hljs,
 })
+const title = ref<any>('')
+const textarea = ref<any>('')
+const operationList = ref<any>([])
+const operationTotal = ref<any>(0)
+const operationObj = reactive<any>({
+  pagesize: 10,
+  page: 1,
+})
+const handleoperationPageChange = (val:any) => {
+  operationObj.page = val
+  getDataDisplayMessage()
+  getDataDisplayCountMessage()
+}
+const operation2List = ref<any>([])
+const operation2Total = ref<any>(0)
+const operation2Obj = reactive<any>({
+  pagesize: 10,
+  page: 1,
+})
+const handleoperation2PageChange = (val:any) => {
+  operation2Obj.page = val
+  getGenerateMessage()
+}
+const sqlType = ref<any>(0)
+const Route = useRoute();
+const getGenerateMessage = async () => {
+  const params:any = {
+    page: operation2Obj.page - 1,
+    pageSize: operation2Obj.pagesize,
+  }
+  const data = await generateMessage(params);
+  // TODO 结构有问题 返回的是对象
+  operation2List.value.push(data)
+}
+const sql2Del = async (row:any) => {
+  const params:any = {
+    id: row.id,
+    title: row.title,
+    context: row.context,
+  }
+  const data = await logicExecMessage(params);
+  // TODO 接口有问题 返回的是对象
+  getGenerateMessage()
+}
+const getLogicExec3Message = async () => {
+  const params:any = {
+  }
+  const data = await logicExec3Message(params);
+  // TODO
+  // WebhooksPayload.value = data
+}
+// sql 001
+const getDataDisplayMessage = async () => {
+  const params:any = {
+    page: operationObj.page - 1,
+    pageSize: operationObj.pagesize,
+  }
+  const data = await dataDisplayMessage(params);
+  operationList.value = data
+}
+const getDataDisplayCountMessage = async () => {
+  const params:any = {
+  }
+  const data = await dataDisplayCountMessage(params);
+  operationTotal.value = data
+}
+const getsqlMessage = async () => {
+  const params:any = {
+  }
+  const data = await sqlMessage(params);
+  title.value = data.title
+  textarea.value = data.context
+}
+const saveMessage = async () => {
+  if (!title.value) {
+    return
+  }
+  const params:any = {
+    title: title.value,
+    context: textarea.value,
+  }
+  const data = await sql1LogicExec(params);
+  ElMessage.success(data.context);
+  getDataDisplayMessage()
+}
+watch(
+  () => Route.params,
+  () => {
+    console.log('Route.params', Route.params)
+    const { type = '' as string } = Route.params;
+    if (type === '1') {
+      sqlType.value = 1
+      getDataDisplayMessage()
+      getDataDisplayCountMessage()
+    }
+    if (type === '2') {
+      sqlType.value = 2
+      getGenerateMessage()
+    }
+    if (type === '3') {
+      sqlType.value = 3
+      getLogicExec3Message()
+    }
+  },
+  { immediate: true, deep: true },
+)
 onMounted(() => {
-  randerEchart()
 })
 </script>
 
 <style scoped lang="scss">
+.delrow{
+  color:#0058F0;
+  cursor: pointer;
+}
 .content{
     display: flex;
     flex-direction: column;
@@ -108,7 +412,6 @@ onMounted(() => {
       flex-direction: column;
       width: 100%;
       gap: 16px;
-      border: 1px solid #ccc;
       >div{
         display: flex;
         width: 100%;

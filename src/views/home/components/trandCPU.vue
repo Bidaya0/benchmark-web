@@ -20,18 +20,10 @@ const props = defineProps({
 });
 const data = ref<any>({
   XData: ['06-29', '06-30', '07-01', '07-02', '07-03', '07-04', '07-05'],
-  YHData: [383, 127, 222, 220, 0, 70, 80],
-  YMData: [83, 127, 22, 220, 0, 10, 200],
+  YHData: [0, 0, 0, 0, 0, 0, 0],
+  YMData: [0, 0, 0, 0, 0, 0, 0],
 })
-watch(
-  () => props.data,
-  () => {
-    console.log(props.data)
-    data.value = props.data
-    randerEchart()
-  },
-  { deep: true },
-)
+
 const scatterChart = ref<ECharts | null>(null);
 const pngUrl = ref<any>('')
 const showAnimation = ref<boolean>(true)
@@ -192,7 +184,17 @@ const randerEchart = async () => {
   scatterChart.value?.setOption(option as any, true);
   pngUrl.value = scatterChart.value.getDataURL()
 }
-
+watch(
+  () => props.data,
+  () => {
+    console.log(props.data)
+    if (props.data.XData && props.data.XData.length > 0) {
+      data.value = props.data
+    }
+    randerEchart()
+  },
+  { deep: true, immediate: true },
+)
 onMounted(() => {
   // randerEchart()
 })

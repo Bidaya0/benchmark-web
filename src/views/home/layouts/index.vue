@@ -137,12 +137,14 @@
             <el-input
               v-model="cpuNum"
               type="number"
+              @change="Changeload"
             />%
           </div>
           <el-switch
             v-model="cpuValue"
             class="ml-2"
             style="--el-switch-on-color: #13ce66;"
+            @change="Changeload"
           />
           <span>{{ cpuValue?'开启':'关闭' }}</span>
         </div>
@@ -154,12 +156,14 @@
             <el-input
               v-model="memNum"
               type="number"
+              @change="Changeload"
             />%
           </div>
           <el-switch
             v-model="memValue"
             class="ml-2"
             style="--el-switch-on-color: #13ce66;"
+            @change="Changeload"
           />
           <span>{{ memValue?'开启':'关闭' }}</span>
         </div>
@@ -245,7 +249,7 @@ import {
 import { useRouter } from 'vue-router';
 import {
   messageLogcount,
-  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount,
+  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload,
 } from '@/api/manage';
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
@@ -278,7 +282,7 @@ const handleloopholePageChange = (val:any) => {
 }
 const router = useRouter();
 const goSql = (row:any) => {
-  router.push('/sql')
+  router.push(`/sql/${row.type}`)
 }
 const getloopholeList = async () => {
   const params:any = {
@@ -325,6 +329,17 @@ const getPhoto = async () => {
     YMData: data.selfInfo.map((item:any) => item.memoryUsage),
   } || {}
 }
+const Changeload = async () => {
+  const params:any = {
+    cpuUsage: Number(cpuNum.value),
+    memoryUsage: Number(memNum.value),
+    cpuLoadEnable: cpuValue.value,
+    memoryLoadEnable: memValue.value,
+  }
+  const data = await messageChangeload(params);
+  // TODO
+  console.log(data)
+}
 
 onMounted(() => {
   getloopholeList()
@@ -332,6 +347,7 @@ onMounted(() => {
   getPhoto()
   getoperationList()
   getoperationListTotal()
+  Changeload()
 })
 </script>
 

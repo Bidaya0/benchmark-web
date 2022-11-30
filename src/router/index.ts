@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/home/layouts/index.vue'),
       },
       {
-        path: '/sql',
+        path: '/sql/:type',
         name: 'sql',
         meta: {
           name: 'sql',
