@@ -7,19 +7,34 @@
 
 <script setup lang="ts">
 import {
-  onMounted, reactive, ref, markRaw,
+  onMounted, reactive, ref, markRaw, watch,
 } from 'vue' // introjs主题
 
 import { ECharts } from 'echarts';
 
-const scatterChart = ref<ECharts | null>(null);
-const pngUrl = ref<any>('')
-const showAnimation = ref<boolean>(true)
-const data = reactive<any>({
+const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+});
+const data = ref<any>({
   XData: ['06-29', '06-30', '07-01', '07-02', '07-03', '07-04', '07-05'],
   YHData: [383, 127, 222, 220, 0, 70, 80],
   YMData: [83, 127, 22, 220, 0, 10, 200],
 })
+watch(
+  () => props.data,
+  () => {
+    console.log(props.data)
+    data.value = props.data
+    randerEchart()
+  },
+  { deep: true },
+)
+const scatterChart = ref<ECharts | null>(null);
+const pngUrl = ref<any>('')
+const showAnimation = ref<boolean>(true)
 
 const randerEchart = async () => {
   const colorMap = {
@@ -48,7 +63,7 @@ const randerEchart = async () => {
       itemWidth: 20,
       itemGap: 20,
       bottom: '0',
-      data: ['应用漏洞', '组件漏洞'],
+      data: ['负载进程', '自身进程'],
     },
     grid: {
       left: '2%',
@@ -61,7 +76,7 @@ const randerEchart = async () => {
       {
         type: 'category',
         boundaryGap: false,
-        data: data.XData,
+        data: data.value.XData,
         axisTick: {
           show: false,
         },
@@ -102,7 +117,7 @@ const randerEchart = async () => {
         },
       },
       {
-        name: '应用漏洞',
+        name: '负载进程',
         type: 'line',
         symbol: 'circle',
         symbolSize: 0,
@@ -131,10 +146,10 @@ const randerEchart = async () => {
         emphasis: {
           focus: 'series',
         },
-        data: data.YHData,
+        data: data.value.YHData,
       },
       {
-        name: '组件漏洞',
+        name: '自身进程',
         type: 'line',
         symbol: 'circle',
         symbolSize: 0,
@@ -164,7 +179,7 @@ const randerEchart = async () => {
         emphasis: {
           focus: 'series',
         },
-        data: data.YMData,
+        data: data.value.YMData,
       },
     ],
   }
@@ -179,7 +194,7 @@ const randerEchart = async () => {
 }
 
 onMounted(() => {
-  randerEchart()
+  // randerEchart()
 })
 </script>
 

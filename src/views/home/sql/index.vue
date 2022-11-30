@@ -3,104 +3,14 @@
     <div class="searchConnections_Upgrade">
       <div class="black" />
       <i class="iconfont icon-Vector" />
-      <span>操作指引：点击“生成内容”，生成数据，点击“保存”添加数据.</span>
+      <span>操作指引：通过以下任一方式访问链接即可.</span>
     </div>
     <div class="content_index">
-      <div class="title">
-        <span>标题：</span>
-        <el-input
-          v-model="title"
-          disabled
-        />
-      </div>
-      <div class="content1">
-        <span>内容：</span>
-        <el-input
-          v-model="textarea"
-          type="textarea"
-          :autosize="{ minRows: 6, maxRows: 10 }"
-          disabled
-        />
-      </div>
-      <div class="button_content">
-        <button class="button-back-btn1">
-          生成内容
-        </button>
-        <button class="button-back-btn">
-          保存
-        </button>
-      </div>
-      <div class="table">
-        <span />
-        <el-table
-          :data="operationList"
-          min-height="calc(100% - 0.53rem)"
-          width="100%"
-          class="assets-grey-theme-table"
-        >
-          <el-table-column
-            prop="id"
-            label="ID"
-            :width="300"
-            show-overflow-tooltip
-          >
-            <template #default="{ row, $index }">
-              <span
-                class="name-input"
-                style="display: flex;align-items: center;cursor: pointer;"
-              >
-                <span
-                  :id="'input'+$index"
-                  class="id"
-                  style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
-                >{{ row.title }}</span>
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="url"
-            label="标题"
-            :width="300"
-          >
-            <template #default="{ row }">
-              <span
-                style="display: flex;align-items: center;"
-              >
-                <span :class="`Severity_${row.severity}`">{{ row.severity }}</span>
-              </span>
-            </template>
-          </el-table-column>
-
-          <el-table-column
-            prop="content"
-            label="内容"
-            fit
-          >
-            <template #default="{ row }">
-              <span style="display: flex;align-items: center">
-                {{ row.date }}
-              </span>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <div
-              class="empty-box"
-            >
-              <div class="title">
-                no Data
-              </div>
-            </div>
-          </template>
-        </el-table>
-        <el-pagination
-          :total="operationTotal"
-          :page-size="operationObj.pagesize"
-          :current-page="operationObj.page"
-          layout="prev, pager, next"
-          style="margin: 8px;display: flex;justify-content: end;"
-          @current-change="handleoperationPageChange"
-        />
-      </div>
+      <VMdEditor
+        v-model="WebhooksPayload"
+        mode="preview"
+        height="306px"
+      />
     </div>
   </div>
 </template>
@@ -109,25 +19,46 @@
 import {
   onMounted, reactive, ref, markRaw,
 } from 'vue' // introjs主题
+import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor'
+import '@kangc/v-md-editor/lib/style/codemirror-editor.css'
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js'
+import '@kangc/v-md-editor/lib/theme/style/github.css'
+
+// codemirror 编辑器的相关资源
+import Codemirror from 'codemirror'
+// mode
+import 'codemirror/mode/markdown/markdown'
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/mode/css/css'
+import 'codemirror/mode/htmlmixed/htmlmixed'
+import 'codemirror/mode/vue/vue'
+// edit
+import 'codemirror/addon/edit/closebrackets'
+import 'codemirror/addon/edit/closetag'
+import 'codemirror/addon/edit/matchbrackets'
+// placeholder
+import 'codemirror/addon/display/placeholder'
+// active-line
+import 'codemirror/addon/selection/active-line'
+// scrollbar
+import 'codemirror/addon/scroll/simplescrollbars'
+import 'codemirror/addon/scroll/simplescrollbars.css'
+// style
+import 'codemirror/lib/codemirror.css'
+
+// highlightjs
+import hljs from 'highlight.js'
 
 const randerEchart = async () => {
 
 }
-const title = ref<any>('')
-const textarea = ref<any>('')
-const operationList = ref<any>([])
-const operationTotal = ref<any>(0)
-const operationObj = reactive<any>({
-  pagesize: 10,
-  page: 1,
+const WebhooksPayload = ref<any>(`
+  * [aws\\_redshift\\_event\\_subscriptions](https://github.com/selefra/selefra-provider-aws/blob/main/docs/tables/aws\\_redshift\\_event\\_subscriptions.md)
+`)
+VMdEditor.Codemirror = Codemirror
+VMdEditor.use(githubTheme, {
+  Hljs: hljs,
 })
-const handleoperationPageChange = (val:any) => {
-  operationObj.page = val
-  getoperationList()
-}
-const getoperationList = () => {
-
-}
 onMounted(() => {
   randerEchart()
 })
@@ -177,6 +108,7 @@ onMounted(() => {
       flex-direction: column;
       width: 100%;
       gap: 16px;
+      border: 1px solid #ccc;
       >div{
         display: flex;
         width: 100%;

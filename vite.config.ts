@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import monacoEditorPlugin from 'vite-plugin-monaco-editor'
 import path from 'path'
 // @ts-ignore
 import fs from 'fs'
@@ -18,21 +17,24 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
   // 根据环境变量加载环境变量文件
   const ASR_ENV = dotenv.parse(fs.readFileSync(`.env.${mode}`))
   return {
-    base: ASR_ENV.VITE_PUBLIC_PATH,
+    // base: './', // ./ /rs
     server: {
-      host: 'localhost',
-      port: 8092,
-      https: true,
+      host: '0.0.0.0',
+      port: 8091,
+      https: false,
       proxy: {
         [ASR_ENV.VITE_BASE_API]: {
           target: `${ASR_ENV.VITE_TARGET_HOST}`,
           changeOrigin: true,
+          // secure: false, // 如果是https接口，需要配置这个参数
+          rewrite: (path) => path.replace(/^\/v1/, ''),
         },
       },
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, './src'),
+        '@': resolve(__dirname, 'src'), // ./
+        // assets: resolve(__dirname, './assets'), // ./
       },
     },
     plugins: [
@@ -43,8 +45,17 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
       Components({
         resolvers: [ElementPlusResolver()],
       }),
-      monacoEditorPlugin({}),
     ],
+    // 强制预构建插件包
+    optimizeDeps: {
+      include: [
+        'monaco-editor/esm/vs/language/json/json.worker',
+        'monaco-editor/esm/vs/language/css/css.worker',
+        'monaco-editor/esm/vs/language/html/html.worker',
+        'monaco-editor/esm/vs/language/typescript/ts.worker',
+        'monaco-editor/esm/vs/editor/editor.worker',
+      ],
+    },
     css: {
       preprocessorOptions: {
         scss: {
@@ -56,19 +67,13 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
           postCssPxToRem({
             rootValue: 16, // 1rem的大小
             propList: ['*'], // 需要转换的属性，这里选择全部都进行转换
+            // propWhiteList: ['container'], // 忽略转换的属性
+            // exclude: /src/,
+            minPixelValue: 12,
+            selectorBlackList: ['container'],
           }),
         ],
       },
-    },
-    // 强制预构建插件包
-    optimizeDeps: {
-      include: [
-        'monaco-editor/esm/vs/language/json/json.worker',
-        'monaco-editor/esm/vs/language/css/css.worker',
-        'monaco-editor/esm/vs/language/html/html.worker',
-        'monaco-editor/esm/vs/language/typescript/ts.worker',
-        'monaco-editor/esm/vs/editor/editor.worker',
-      ],
     },
     build: {
       minify: 'terser', // 是否进行压缩,boolean | 'terser' | 'esbuild',默认使用esbuild

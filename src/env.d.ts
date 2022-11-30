@@ -15,19 +15,20 @@ declare module '*.vue' {
 }
 
 declare module 'insert-css';
+declare module 'snowflake-id'
 declare module '*.md';
-declare module 'vue-codemirror';
-declare module 'codemirror';
-declare module '@codemirror/lang-javascript';
-declare module '@codemirror/view';
-declare module '@codemirror/lang-cpp';
-declare module '@codemirror/lang-python';
+declare module 'intro.js';
+declare function gtag(...argumnet: any): void;
+declare module 'monaco-editor';
 declare module 'vite-plugin-monaco-editor';
+declare module 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 declare module 'monaco-editor/esm/vs/basic-languages/sql/sql.js';
 declare module 'monaco-editor/esm/vs/basic-languages/yaml/yaml.js';
-declare module 'monaco-with-tree';
-declare module 'vue-tabs-chrome';
-declare module 'nice-monaco-tree';
-declare module 'vue-splitpane';
-declare module 'intro.js';
-declare function gio(...argumnet: any): void;
+declare module 'monaco-editor/esm/vs/language/json/json.worker?worker'
+declare module 'monaco-editor/esm/vs/language/css/css.worker?worker'
+declare module 'monaco-editor/esm/vs/language/html/html.worker?worker'
+declare module 'monaco-editor/esm/vs/editor/editor.worker?worker'
+declare module '@kangc/v-md-editor/lib/preview'
+declare module '@kangc/v-md-editor/lib/codemirror-editor'
+declare module '@kangc/v-md-editor/lib/theme/github.js'
+declare module 'highlight.js'

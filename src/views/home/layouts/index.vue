@@ -20,12 +20,13 @@
             <span
               class="name-input"
               style="display: flex;align-items: center;cursor: pointer;"
+              @click="goSql(row)"
             >
               <span
                 :id="'input'+$index"
                 class="id"
-                style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
-              >{{ row.title }}</span>
+                style="flex: 1;color:#169BD5;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+              >{{ row.name }}</span>
             </span>
           </template>
         </el-table-column>
@@ -38,7 +39,7 @@
             <span
               style="display: flex;align-items: center;"
             >
-              <span :class="`Severity_${row.severity}`">{{ row.severity }}</span>
+              <span :class="`Severity_${row.severity}`">{{ row.path }}</span>
             </span>
           </template>
         </el-table-column>
@@ -52,8 +53,8 @@
               style="display: flex; align-items: center;"
             >
               <span
-                style=" color: #171B23;"
-              >{{ row.resource_type }}</span>
+                :style="row?.accessCount<100?'color: #171B23;':'color: #A30014;'"
+              >{{ row.accessCount }}</span>
             </span>
           </template>
         </el-table-column>
@@ -64,9 +65,10 @@
         >
           <template #default="{ row }">
             <span
-              style="display: flex;align-items: center;justify-content: center;"
+              style="display: flex;align-items: center;"
             >
-              {{ row.issues_count }}
+              <span style="width:40%;">新增 +{{ row.dirtyDataInsertCount }} </span>
+              <span style="width:40%;">误删 -{{ row.dirtyDataDeleteCount }}</span>
             </span>
           </template>
         </el-table-column>
@@ -74,11 +76,12 @@
         <el-table-column
           prop="date"
           label="响应时间"
-          :width="300"
+          fit
         >
           <template #default="{ row }">
-            <span style="display: flex;align-items: center">
-              {{ row.date }}
+            <span style="display: flex;align-items: center;">
+              <span style="width:50%;">平均 {{ row.responseTimeAverage }} s</span>
+              <span style="width:50%;">最高 {{ row.responseTimeMax }} s</span>
             </span>
           </template>
         </el-table-column>
@@ -111,7 +114,7 @@
             CPU Usege 得分：<span>B</span>（80分)
           </div>
           <div class="echartImg">
-            <trandCPU />
+            <trandCPU :data="cpuData" />
           </div>
         </div>
         <div class="two_photo_two">
@@ -119,7 +122,7 @@
             Memage Usege 得分：<span>A</span>（80分）
           </div>
           <div class="echartImg">
-            <trandMemage />
+            <trandMemage :data="memData" />
           </div>
         </div>
       </div>
@@ -183,7 +186,7 @@
                   :id="'input'+$index"
                   class="id"
                   style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
-                >{{ row.title }}</span>
+                >{{ row.id }}</span>
               </span>
             </template>
           </el-table-column>
@@ -196,7 +199,7 @@
               <span
                 style="display: flex;align-items: center;"
               >
-                <span :class="`Severity_${row.severity}`">{{ row.severity }}</span>
+                <span>{{ row.context }}</span>
               </span>
             </template>
           </el-table-column>
@@ -208,7 +211,7 @@
           >
             <template #default="{ row }">
               <span style="display: flex;align-items: center">
-                {{ row.date }}
+                {{ enformatDate(row.timestamp) }}
               </span>
             </template>
           </el-table-column>
@@ -239,8 +242,14 @@
 import {
   onMounted, reactive, ref, markRaw,
 } from 'vue' // introjs主题
+import { useRouter } from 'vue-router';
+import {
+  messageLogcount,
+  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount,
+} from '@/api/manage';
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
+import { enformatDate1, enformatDate } from '@/utils';
 
 const cpuValue = ref<any>(true)
 const memValue = ref<any>(true)
@@ -267,15 +276,62 @@ const handleloopholePageChange = (val:any) => {
   loopholeObj.page = val
   getloopholeList()
 }
+const router = useRouter();
+const goSql = (row:any) => {
+  router.push('/sql')
+}
 const getloopholeList = async () => {
-
+  const params:any = {
+    page: loopholeObj.page - 1,
+    pageSize: loopholeObj.pagesize,
+  }
+  const data = await messageVulList(params);
+  loopholeList.value = data || []
+}
+const getloopholeTotal = async () => {
+  const params:any = {
+  }
+  const data = await messageVulListCount(params);
+  loopholeTotal.value = data || 0
 }
 const getoperationList = async () => {
-
+  const params:any = {
+    page: operationObj.page - 1,
+    pageSize: operationObj.pagesize,
+  }
+  const data = await messageLogDisplay(params);
+  operationList.value = data || []
+}
+const getoperationListTotal = async () => {
+  const params:any = {
+  }
+  const data = await messageLogcount(params);
+  operationTotal.value = data || 0
+}
+const cpuData = ref<any>()
+const memData = ref<any>()
+const getPhoto = async () => {
+  const params:any = {
+  }
+  const data = await messageMetric_display(params);
+  cpuData.value = {
+    XData: data.loadInfo.map((item:any) => enformatDate1(item.timestamp)),
+    YHData: data.loadInfo.map((item:any) => item.cpuUsage),
+    YMData: data.selfInfo.map((item:any) => item.cpuUsage),
+  } || {}
+  memData.value = {
+    XData: data.loadInfo.map((item:any) => enformatDate1(item.timestamp)),
+    YHData: data.loadInfo.map((item:any) => item.memoryUsage),
+    YMData: data.selfInfo.map((item:any) => item.memoryUsage),
+  } || {}
 }
 
 onMounted(() => {
   getloopholeList()
+  getloopholeTotal()
+  getPhoto()
+  getoperationList()
+  getoperationListTotal()
 })
 </script>
 

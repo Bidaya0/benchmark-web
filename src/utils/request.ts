@@ -6,11 +6,11 @@ import ssoLogin from '@/utils/ssoLogin';
 // import { logout } from '@/api/user';
 
 const Router = Vrouter;
-console.log('import.meta.env.VITE_BASE_API', import.meta.env.VITE_BASE_API)
+console.log('import.meta.env.VITE_BASE_API', import.meta.env.VITE_BASE_API, import.meta.env.VITE_TARGET_HOST)
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API as string,
-  // baseURL: 'http://local-asr.huoxian.cn:8008',
-  timeout: 99999,
+  // baseURL: 'http://192.168.0.64:8080/',
+  timeout: 5000,
 });
 
 // http request 拦截器
@@ -18,7 +18,7 @@ service.interceptors.request.use(
   (config:any) => {
     // 全局添加 token
     if (getToken()) {
-      config.headers['asr-token'] = getToken();
+      // config.headers['asr-token'] = getToken();
     }
     return config;
   },
