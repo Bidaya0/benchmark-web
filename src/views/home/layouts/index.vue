@@ -313,7 +313,7 @@ const handleloopholePageChange = (val:any) => {
 }
 const router = useRouter();
 const goSql = (row:any) => {
-  router.push(`/sql/${row.type}`)
+  router.push(`/sql/${row.path}/${row.type}`)
 }
 const getloopholeList = async () => {
   const params:any = {
@@ -370,6 +370,7 @@ const Changeload = async () => {
   const data = await messageChangeload(params);
   // TODO
   console.log(data)
+  getoperationList()
 }
 const allScores = ref<any>({})
 const gettestscores = async () => {

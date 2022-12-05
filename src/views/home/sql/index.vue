@@ -287,6 +287,7 @@ const getGenerateMessage = async () => {
   const params:any = {
     page: operation2Obj.page - 1,
     pageSize: operation2Obj.pagesize,
+    path: urlpath.value,
   }
   const data = await generateMessage(params);
   operation2ListLLoading.value = false
@@ -295,6 +296,7 @@ const getGenerateMessage = async () => {
 }
 const getGenerateMessageCount = async () => {
   const params:any = {
+    path: urlpath.value,
   }
   const data = await dataDisplayCount(params);
   // TODO 结构有问题 返回的是对象
@@ -305,6 +307,7 @@ const sql2Del = async (row:any) => {
     id: row.id,
     title: row.title,
     context: row.context,
+    path: urlpath.value,
   }
   const data = await logicExecMessage(params);
   // TODO 接口有问题 返回的是对象
@@ -320,6 +323,7 @@ const getLogicExec3Message = async () => {
     background: 'rgba(255, 255, 255, 0.6)',
   })
   const params:any = {
+    path: urlpath.value,
   }
   const data = await logicExec3Message(params);
   loading.close()
@@ -332,6 +336,7 @@ const getDataDisplayMessage = async () => {
   const params:any = {
     page: operationObj.page - 1,
     pageSize: operationObj.pagesize,
+    path: urlpath.value,
   }
   const data = await dataDisplayMessage(params);
   operation1ListLLoading.value = false
@@ -339,12 +344,14 @@ const getDataDisplayMessage = async () => {
 }
 const getDataDisplayCountMessage = async () => {
   const params:any = {
+    path: urlpath.value,
   }
   const data = await dataDisplayCountMessage(params);
   operationTotal.value = data
 }
 const getsqlMessage = async () => {
   const params:any = {
+    path: urlpath.value,
   }
   const data = await sqlMessage(params);
   title.value = data.title
@@ -358,16 +365,19 @@ const saveMessage = async () => {
   const params:any = {
     title: title.value,
     context: textarea.value,
+    path: urlpath.value,
   }
   const data = await sql1LogicExec(params);
   ElMessage.success(data.context);
   getDataDisplayMessage()
 }
+const urlpath = ref<any>('')
 watch(
   () => Route.params,
   () => {
     console.log('Route.params', Route.params)
-    const { type = '' as string } = Route.params;
+    const { type = '' as string, path = '' as string } = Route.params;
+    urlpath.value = path
     if (type === '1') {
       sqlType.value = 1
       getDataDisplayMessage()
