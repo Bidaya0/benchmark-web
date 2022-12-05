@@ -1,10 +1,17 @@
 <template>
-  <div class="content">
+  <div
+    id="printMe"
+    class="content"
+  >
     <div class="one_table">
-      <div class="one_table_title">
+      <div
+        class="one_table_title"
+        @click="daYinprint"
+      >
         检测影响得分：<span>S</span>（95分）
       </div>
       <el-table
+        id="tableId"
         :data="loopholeList"
         min-height="calc(100% - 0.53rem)"
         width="100%"
@@ -127,7 +134,9 @@
         </div>
       </div>
     </div>
-    <div class="table_three">
+    <div
+      class="table_three"
+    >
       <div class="select">
         <div class="KeepCpu">
           <span>
@@ -247,14 +256,34 @@ import {
   onMounted, reactive, ref, markRaw,
 } from 'vue' // introjs主题
 import { useRouter } from 'vue-router';
+import html2canvas from 'html2canvas';
+import JsPDF from 'jspdf';
 import {
   messageLogcount,
   messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload,
 } from '@/api/manage';
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
-import { enformatDate1, enformatDate } from '@/utils';
+import {
+  enformatDate1, enformatDate, downloadPDF, handlePrint, outputPDF, downloadPDF1,
+} from '@/utils';
+// 引入插件
 
+// const printObj = {
+//   id: 'printMe', // 打印区域 Dom ID
+//   popTitle: '', // 打印的标题
+//   extraCss: '', // 打印可引入外部的一个css文件
+//   // extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>,<style> #printMe { height: auto !important; } <style>', // 打印头部文字附加在head标签上的额外标签//可以传进去 style tag 标签；注意要逗号分隔 解决特定区域不显示问题；
+//   // preview: '', // 是否启动预览模式，默认是false（开启预览模式，可以先预览后打印）
+//   // previewTitle: '', // 打印预览的标题（开启预览模式后出现）,
+//   // previewPrintBtnLabel: '', // 打印预览的标题的下方按钮文本，点击可进入打印（开启预览模式后出现）
+//   // zIndex: '', // 预览的窗口的z-index，默认是 20002（此值要高一些，这涉及到预览模式是否显示在最上面）
+//   previewBeforeOpenCallback() {}, // 预览窗口打开之前的callback（开启预览模式调用）
+//   previewOpenCallback() {}, // 预览窗口打开之后的callback（开启预览模式调用）
+//   beforeOpenCallback() {}, // 开启打印前的回调事件
+//   openCallback() {}, // 调用打印之后的回调事件
+//   closeCallback() {}, // 关闭打印的回调事件（无法确定点击的是确认还是取消）
+// }
 const cpuValue = ref<any>(true)
 const memValue = ref<any>(true)
 const cpuNum = ref<any>(50)
@@ -341,6 +370,127 @@ const Changeload = async () => {
   console.log(data)
 }
 
+const exportPDF = () => {
+  const ele: HTMLElement | null = document.getElementById('printMe');
+  html2canvas(ele as HTMLElement, {
+    dpi: 400, // 分辨率
+    scale: 2, // 设置缩放
+    useCORS: true, // 允许canvas画布内 可以跨域请求外部链接图片, 允许跨域请求。,
+    // backgroundColor:'#ffffff',这样背景还是黑的
+    bgcolor: '#ffffff', // 应该这样写
+    logging: false, // 打印日志用的 可以不加默认为false
+  } as any).then((canvas:any) => {
+    const contentWidth = canvas.width;
+    const contentHeight = canvas.height;
+    // 一页pdf显示html页面生成的canvas高度;
+    const pageHeight = (contentWidth / 592.28) * 841.89;
+    // 未生成pdf的html页面高度
+    let leftHeight = contentHeight;
+    // 页面偏移
+    let position = 0;
+    // a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+    const imgWidth = 595.28;
+    const imgHeight = (595.28 / contentWidth) * contentHeight;
+    // const ctx: any = canvas.getContext('2d');
+    // 添加水印
+    // ctx.textAlign = 'center';
+    // ctx.textBaseline = 'middle';
+    // ctx.rotate((25 * Math.PI) / 180);
+    // ctx.font = '20px Microsoft Yahei';
+    // ctx.fillStyle = 'rgba(184, 184, 184, 0.8)';
+    // for (let i = contentWidth * -1; i < contentWidth; i += 240) {
+    //   for (let j = contentHeight * -1; j < contentHeight; j += 100) {
+    //     // 填充文字，x 间距, y 间距
+    //     ctx.fillText('selefra-cloud', i, j);
+    //   }
+    // }
+    const pageData = canvas.toDataURL('image/jpeg', 1.0);
+    const pdf = new JsPDF('p', 'pt', 'a4');
+    if (leftHeight < pageHeight) {
+      // 在pdf.addImage(pageData, 'JPEG', 左，上，宽度，高度)设置在pdf中显示；
+      pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+    } else {
+    // 分页
+      while (leftHeight > 0) {
+        pdf.addImage(
+          pageData,
+          'JPEG',
+          0,
+          position,
+          imgWidth,
+          imgHeight,
+        );
+        leftHeight -= pageHeight;
+        position -= 841.89;
+        // 避免添加空白页
+        if (leftHeight > 0) {
+          pdf.addPage();
+        }
+      }
+    }
+    // 可动态生成
+    pdf.save('文件名.pdf');
+  });
+}
+
+const cropCanvas = (
+  canvas: any,
+  contentWidth: any,
+  contentHeight: any,
+  positionTop: any,
+  hasPos: any,
+) => {
+  const ctx = canvas.getContext('2d');
+  // 新canvas控件- 保存裁剪后的图片
+  const newCanvas = document.createElement('canvas');
+  const newCtx: any = newCanvas.getContext('2d');
+  newCanvas.setAttribute('width', contentWidth);
+  newCanvas.setAttribute('height', contentHeight);
+  // 导出的pdf默认黑色背景，需要用白色填充
+  newCtx.fillStyle = '#FFFFFF';
+  newCtx.fillRect(0, 0, contentWidth, contentHeight);
+  // hasPos-3 防止截取掉表格title的最上方1px
+  const imgRgbData = ctx.getImageData(0, hasPos > 0 ? (hasPos - 3) : hasPos, contentWidth, positionTop);
+  console.log('positionTop=', positionTop, ' hasPos=', hasPos);
+  // 把裁剪后的像素数据渲染到新canvas
+  newCtx.putImageData(imgRgbData, 0, 0);
+  // 获取裁剪后图片的base64数据
+  const imgBase64 = newCanvas.toDataURL('image/jpeg', 1.0);
+  return imgBase64;
+}
+const daYinprint = () => {
+  // exportPDF()
+  // handlePrint('printMe', false)
+  // outputPDF(
+  //   {
+  //     element: document.querySelector('#printMe'),
+  //     contentWidth: 550,
+  //     footer: document.querySelector('#footer'),
+  //     header: document.querySelector('#header'),
+  //   },
+  // )
+  downloadPDF1(document.querySelector('#printMe'), 'benchmark');
+  // let iframe = document.getElementById('print-iframe');
+  // if (!iframe) {
+  //   const el = document.getElementById('printMe');
+  //   iframe = document.createElement('IFRAME');
+  //   let doc = null;
+  //   iframe.setAttribute('id', 'print-iframe');
+  //   iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
+  //   document.body.appendChild(iframe);
+  //   doc = (iframe as any).contentWindow.document;
+  //   // 这里可以自定义样式
+  //   doc.write('<style media="print">@page {size: auto;margin: 0mm;}</style>'); // 解决出现页眉页脚和路径的问题
+  //   doc.write(`<div>${(el as HTMLElement).innerHTML}</div>`);
+  //   doc.close();
+  //   (iframe as any).contentWindow.focus();
+  // }
+  // setTimeout(() => { (iframe as any).contentWindow.print(); }, 5000) // 解决第一次样式不生效的问题
+  // if (navigator.userAgent.indexOf('MSIE') > 0) {
+  //   document.body.removeChild(iframe);
+  // }
+}
+
 onMounted(() => {
   getloopholeList()
   getloopholeTotal()
@@ -359,6 +509,7 @@ onMounted(() => {
       margin: 0 auto;
       max-width: 1200px;
       margin-top: 24px;
+      // padding:40px;
       .one_table{
         .one_table_title{
           font-weight: 600;

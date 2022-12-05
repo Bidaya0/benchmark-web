@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import lazyPlugin from 'vue3-lazy'
+import print from 'vue3-print-nb'
 import App from './App.vue';
 import router from '@/router';
 import store from '@/store';
@@ -29,5 +30,6 @@ createApp(App)
   .use(store)
   .use(lazyPlugin, {})
   .use(i18n)
+  .use(print)
   .use(permission)
   .mount('#app');
