@@ -8,7 +8,7 @@
         class="one_table_title"
         @click="daYinprint"
       >
-        检测影响得分：<span>S</span>（95分）
+        检测影响得分：<span>{{ allScores.level }}</span>（{{ allScores.score }}分）
       </div>
       <el-table
         id="tableId"
@@ -74,8 +74,8 @@
             <span
               style="display: flex;align-items: center;"
             >
-              <span style="width:40%;">新增 +{{ row.dirtyDataInsertCount }} </span>
-              <span style="width:40%;">误删 -{{ row.dirtyDataDeleteCount }}</span>
+              <span style="width:40%;">新增 + {{ row.dirtyDataInsertCount }} </span>
+              <span style="width:40%;">误删 - {{ row.dirtyDataDeleteCount }}</span>
             </span>
           </template>
         </el-table-column>
@@ -112,13 +112,14 @@
       />
     </div>
     <div class="two_photo">
-      <div class="two_table_title">
+      <!-- <div class="two_table_title">
         资源影响得分：<span>S</span>（95分）
-      </div>
+      </div> -->
       <div class="two_photo_all">
         <div class="two_photo_one">
           <div class="two_photo_num_title">
-            CPU Usege 得分：<span>B</span>（80分)
+            CPU Usege
+            <!-- 得分：<span>B</span>（80分) -->
           </div>
           <div class="echartImg">
             <trandCPU :data="cpuData" />
@@ -126,7 +127,8 @@
         </div>
         <div class="two_photo_two">
           <div class="two_photo_num_title">
-            Memage Usege 得分：<span>A</span>（80分）
+            Memage Usege
+            <!-- 得分：<span>A</span>（80分） -->
           </div>
           <div class="echartImg">
             <trandMemage :data="memData" />
@@ -260,7 +262,7 @@ import html2canvas from 'html2canvas';
 import JsPDF from 'jspdf';
 import {
   messageLogcount,
-  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload,
+  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload, testscores,
 } from '@/api/manage';
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
@@ -368,6 +370,14 @@ const Changeload = async () => {
   const data = await messageChangeload(params);
   // TODO
   console.log(data)
+}
+const allScores = ref<any>({})
+const gettestscores = async () => {
+  const params:any = {
+  }
+  const data = await testscores(params);
+  // TODO
+  allScores.value = data
 }
 
 const exportPDF = () => {
@@ -492,6 +502,7 @@ const daYinprint = () => {
 }
 
 onMounted(() => {
+  gettestscores()
   getloopholeList()
   getloopholeTotal()
   getPhoto()

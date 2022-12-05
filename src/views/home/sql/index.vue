@@ -45,6 +45,7 @@
       <div class="table">
         <span />
         <el-table
+          v-loading="operation1ListLLoading"
           :data="operationList"
           min-height="calc(100% - 0.53rem)"
           width="100%"
@@ -121,6 +122,7 @@
       <div class="table">
         <span />
         <el-table
+          v-loading="operation2ListLLoading"
           :data="operation2List"
           min-height="calc(100% - 0.53rem)"
           width="100%"
@@ -195,6 +197,7 @@
     </div>
     <div
       v-show="sqlType===3"
+      id="content3"
       class="content_index"
       style="border: 1px solid #ccc;"
     >
@@ -241,21 +244,20 @@ import 'codemirror/lib/codemirror.css'
 // highlightjs
 import hljs from 'highlight.js'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElLoading, ElMessage } from 'element-plus'
 import {
   dataDisplayCountMessage,
-  dataDisplayMessage, generateMessage, logicExec3Message, logicExecMessage, sql1LogicExec, sqlMessage,
+  dataDisplayMessage, dataDisplayCount, generateMessage, logicExec3Message, logicExecMessage, sql1LogicExec, sqlMessage,
 } from '@/api/manage'
 
-const WebhooksPayload = ref<any>(`
-  * [aws\\_redshift\\_event\\_subscriptions](https://github.com/selefra/selefra-provider-aws/blob/main/docs/tables/aws\\_redshift\\_event\\_subscriptions.md)
-`)
+const WebhooksPayload = ref<any>('')
 VMdEditor.Codemirror = Codemirror
 VMdEditor.use(githubTheme, {
   Hljs: hljs,
 })
 const title = ref<any>('')
 const textarea = ref<any>('')
+const operation1ListLLoading = ref<any>(false)
 const operationList = ref<any>([])
 const operationTotal = ref<any>(0)
 const operationObj = reactive<any>({
@@ -273,6 +275,7 @@ const operation2Obj = reactive<any>({
   pagesize: 10,
   page: 1,
 })
+const operation2ListLLoading = ref<any>(false)
 const handleoperation2PageChange = (val:any) => {
   operation2Obj.page = val
   getGenerateMessage()
@@ -280,13 +283,22 @@ const handleoperation2PageChange = (val:any) => {
 const sqlType = ref<any>(0)
 const Route = useRoute();
 const getGenerateMessage = async () => {
+  operation2ListLLoading.value = true
   const params:any = {
     page: operation2Obj.page - 1,
     pageSize: operation2Obj.pagesize,
   }
   const data = await generateMessage(params);
+  operation2ListLLoading.value = false
   // TODO 结构有问题 返回的是对象
-  operation2List.value.push(data)
+  operation2List.value = data || []
+}
+const getGenerateMessageCount = async () => {
+  const params:any = {
+  }
+  const data = await dataDisplayCount(params);
+  // TODO 结构有问题 返回的是对象
+  operation2Total.value = data || 0
 }
 const sql2Del = async (row:any) => {
   const params:any = {
@@ -296,22 +308,33 @@ const sql2Del = async (row:any) => {
   }
   const data = await logicExecMessage(params);
   // TODO 接口有问题 返回的是对象
+  ElMessage.success(data.context)
   getGenerateMessage()
+  getGenerateMessageCount()
 }
 const getLogicExec3Message = async () => {
+  const loading = ElLoading.service({
+    lock: true,
+    target: document.getElementById('content3') as HTMLElement,
+    text: 'Loading',
+    background: 'rgba(255, 255, 255, 0.6)',
+  })
   const params:any = {
   }
   const data = await logicExec3Message(params);
+  loading.close()
   // TODO
-  // WebhooksPayload.value = data
+  WebhooksPayload.value = data
 }
 // sql 001
 const getDataDisplayMessage = async () => {
+  operation1ListLLoading.value = true
   const params:any = {
     page: operationObj.page - 1,
     pageSize: operationObj.pagesize,
   }
   const data = await dataDisplayMessage(params);
+  operation1ListLLoading.value = false
   operationList.value = data
 }
 const getDataDisplayCountMessage = async () => {
@@ -326,6 +349,7 @@ const getsqlMessage = async () => {
   const data = await sqlMessage(params);
   title.value = data.title
   textarea.value = data.context
+  getDataDisplayMessage()
 }
 const saveMessage = async () => {
   if (!title.value) {
@@ -352,6 +376,7 @@ watch(
     if (type === '2') {
       sqlType.value = 2
       getGenerateMessage()
+      getGenerateMessageCount()
     }
     if (type === '3') {
       sqlType.value = 3

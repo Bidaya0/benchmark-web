@@ -16,12 +16,14 @@ export const messageChangeload: requestModel = (params:any) => request.post('/ma
 
 // sql 2
 // list /vulforcheck/002/generateMessage
-export const generateMessage: requestModel = (params:any) => request.get(`/vulforcheck/002/generateMessage?page=${params.page}&pagesize=${params.pageSize}`);
+export const generateMessage: requestModel = (params:any) => request.get(`/vulforcheck/002/dataDisplay?page=${params.page}&pageSize=${params.pageSize}`);
 // del
 export const logicExecMessage: requestModel = (params:any) => request.get(`/vulforcheck/002/logicExec?id=${params.id}`);
+// list count
+export const dataDisplayCount: requestModel = (params:any) => request.get('/vulforcheck/002/dataDisplayCount');
 
 // sql3
-export const logicExec3Message: requestModel = (params:any) => request.get('/vulforcheck/003/logicExec');
+export const logicExec3Message: requestModel = (params:any) => request.get('/vulforcheck/003/generateMessage');
 
 // sql1 list  /vulforcheck/001/dataDisplay
 export const dataDisplayMessage: requestModel = (params:any) => request.get(`/vulforcheck/001/dataDisplay?page=${params.page}&pageSize=${params.pageSize}`);
@@ -30,3 +32,6 @@ export const dataDisplayCountMessage: requestModel = (params:any) => request.get
 export const sqlMessage: requestModel = (params:any) => request.get('/vulforcheck/001/generateMessage');
 // save vulforcheck/001/logicExec
 export const sql1LogicExec: requestModel = (params:any) => request.get(`/vulforcheck/001/logicExec?title=${params.title}&context=${params.context}`);
+
+// 分数
+export const testscores: requestModel = (params:any) => request.get('/managerment/manage/testscores');

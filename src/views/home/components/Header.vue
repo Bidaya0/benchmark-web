@@ -18,12 +18,12 @@
         </div>
       </div>
 
-      <div
+      <!-- <div
         v-show="route.meta.name==='index'"
         class="title_score"
       >
         总得分：<span>{{ scoreObj.grade }}</span>（{{ scoreObj.score }}分）
-      </div>
+      </div> -->
     </header>
   </div>
 </template>
