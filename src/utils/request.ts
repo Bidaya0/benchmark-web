@@ -1,5 +1,6 @@
 import axios from 'axios'; // 引入axios
 // import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 import Vrouter from '@/router'
 import { getToken } from '@/utils/auth';
 import ssoLogin from '@/utils/ssoLogin';
@@ -33,7 +34,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   // (response) => response.data,
   (response) => {
-    // console.log('response.data', response.data)
+    console.log('response.data', response)
     if (response.data.code === 9) {
       // Router.replace('/rejectUser');
       return
@@ -49,12 +50,12 @@ service.interceptors.response.use(
     }
     // 网络超时
     if (error.message && error.message.includes('timeout')) {
-      console.error('请求超时');
+      ElMessage.error('请求超时');
       return error.message;
     }
     if (error.response && error.response.status && error.response.status === 500) {
       // 没有权限
-      console.error('接口异常');
+      ElMessage.error('接口异常');
       return error;
     }
     return error;
