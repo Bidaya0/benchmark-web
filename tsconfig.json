@@ -8,6 +8,7 @@
     "suppressImplicitAnyIndexErrors":true,
     "jsx": "preserve",
     "sourceMap": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": [

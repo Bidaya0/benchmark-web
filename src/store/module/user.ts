@@ -11,11 +11,6 @@ export const user = {
   mutations: {
     setUserInfo(state: any, data: UserInfo | null) {
       state.user = data;
-      gio('setUserId', data?.user_id);
-      gio('people.set', 'loginUserName', data?.username);
-      gio('people.set', {
-        loginUserName: data?.username,
-      });
     },
     setOrgUserInfo(state: any, data: any) {
       state.userOrg = data;
@@ -64,7 +59,6 @@ export const user = {
     },
     async logout(context: any) {
       await logout();
-      gio('clearUserId');
       context.commit('setUserInfo', null);
     },
   },
