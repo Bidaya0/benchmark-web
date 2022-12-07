@@ -46,7 +46,7 @@ export default defineComponent({
         return new EditorWorker()
       },
     }
-    let editor: monaco.editor.IStandaloneCodeEditor
+    let editor: any
     const codeEditBox = ref()
 
     const init = () => {
