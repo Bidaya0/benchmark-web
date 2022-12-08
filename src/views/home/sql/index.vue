@@ -169,6 +169,12 @@
             <template #default="{ row }">
               <span style="display: flex;align-items: center">
                 <span
+                  v-show="(row.id!==deleteObj.id)"
+                  class="nodelrow"
+                  @click="sql2Del(row)"
+                >删除</span>
+                <span
+                  v-show="(row.id===deleteObj.id)"
                   class="delrow"
                   @click="sql2Del(row)"
                 >删除</span>
@@ -247,7 +253,7 @@ import { useRoute } from 'vue-router'
 import { ElLoading, ElMessage } from 'element-plus'
 import {
   dataDisplayCountMessage,
-  dataDisplayMessage, dataDisplayCount, generateMessage, logicExec3Message, logicExecMessage, sql1LogicExec, sqlMessage,
+  dataDisplayMessage, dataDisplayCount, generateMessage, logicExec3Message, logicExecMessage, sql1LogicExec, sqlMessage, generateMessage02,
 } from '@/api/manage'
 
 const WebhooksPayload = ref<any>('')
@@ -282,8 +288,18 @@ const handleoperation2PageChange = (val:any) => {
 }
 const sqlType = ref<any>(0)
 const Route = useRoute();
+const deleteObj = ref<any>({})
+const getGenerateMessage02 = async () => {
+  operation2ListLLoading.value = true
+  const params:any = {
+    path: urlpath.value,
+  }
+  const data = await generateMessage02(params);
+  deleteObj.value = data
+}
 const getGenerateMessage = async () => {
   operation2ListLLoading.value = true
+  await getGenerateMessage02()
   const params:any = {
     page: operation2Obj.page - 1,
     pageSize: operation2Obj.pagesize,
@@ -403,6 +419,10 @@ onMounted(() => {
 .delrow{
   color:#0058F0;
   cursor: pointer;
+}
+.nodelrow{
+  color:#ccc;
+  cursor: no-drop;
 }
 .content{
     display: flex;

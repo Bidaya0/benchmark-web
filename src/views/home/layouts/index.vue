@@ -286,10 +286,10 @@ import {
 //   openCallback() {}, // 调用打印之后的回调事件
 //   closeCallback() {}, // 关闭打印的回调事件（无法确定点击的是确认还是取消）
 // }
-const cpuValue = ref<any>(true)
-const memValue = ref<any>(true)
-const cpuNum = ref<any>(50)
-const memNum = ref<any>(50)
+const cpuValue = ref<any>(false)
+const memValue = ref<any>(false)
+const cpuNum = ref<any>(0)
+const memNum = ref<any>(0)
 const loopholeList = ref<any>([])
 const loopholeTotal = ref<any>(0)
 const loopholeObj = reactive<any>({
@@ -509,7 +509,6 @@ onMounted(() => {
   getPhoto()
   getoperationList()
   getoperationListTotal()
-  Changeload()
 })
 </script>
 

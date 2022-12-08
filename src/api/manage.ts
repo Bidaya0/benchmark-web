@@ -21,6 +21,8 @@ export const generateMessage: requestModel = (params:any) => request.get(`/vulfo
 export const logicExecMessage: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/logicExec?id=${params.id}`);
 // list count
 export const dataDisplayCount: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/dataDisplayCount`);
+// /vulforcheck/002/generateMessage
+export const generateMessage02: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/generateMessage`);
 
 // sql3
 export const logicExec3Message: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/generateMessage`);
