@@ -328,6 +328,7 @@ const sql2Del = async (row:any) => {
   const data = await logicExecMessage(params);
   // TODO 接口有问题 返回的是对象
   ElMessage.success(data.context)
+
   getGenerateMessage()
   getGenerateMessageCount()
 }
