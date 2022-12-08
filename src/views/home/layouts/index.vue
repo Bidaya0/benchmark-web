@@ -3,230 +3,93 @@
     id="printMe"
     class="content"
   >
-    <div class="one_table">
-      <div
-        class="one_table_title"
-        @click="daYinprint"
-      >
-        检测影响得分：<span>{{ allScores.level }}</span>（{{ allScores.score }}分）
-      </div>
-      <el-table
-        id="tableId"
-        :data="loopholeList"
-        min-height="calc(100% - 0.53rem)"
-        width="100%"
-        class="assets-grey-theme-table"
-      >
-        <el-table-column
-          prop="title"
-          label="漏洞名称"
-          :width="300"
-          show-overflow-tooltip
+    <div class="left">
+      <div class="one_table">
+        <div
+          class="one_table_title"
+          @click="daYinprint"
         >
-          <template #default="{ row, $index }">
-            <span
-              class="name-input"
-              style="display: flex;align-items: center;cursor: pointer;"
-              @click="goSql(row)"
-            >
-              <span
-                :id="'input'+$index"
-                class="id"
-                style="flex: 1;color:#169BD5;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
-              >{{ row.name }}</span>
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="url"
-          label="漏洞地址"
-          :width="200"
-        >
-          <template #default="{ row }">
-            <span
-              style="display: flex;align-items: center;"
-            >
-              <span :class="`Severity_${row.severity}`">{{ row.path }}</span>
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="number"
-          label="请求次数"
-          :width="200"
-        >
-          <template #default="{ row }">
-            <span
-              style="display: flex; align-items: center;"
-            >
-              <span
-                :style="row?.accessCount<100?'color: #171B23;':'color: #A30014;'"
-              >{{ row.accessCount }}</span>
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="url"
-          label="脏数据"
-          :width="300"
-        >
-          <template #default="{ row }">
-            <span
-              style="display: flex;align-items: center;"
-            >
-              <span style="width:40%;">新增 + {{ row.dirtyDataInsertCount }} </span>
-              <span style="width:40%;">误删 - {{ row.dirtyDataDeleteCount }}</span>
-            </span>
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          prop="date"
-          label="响应时间"
-          fit
-        >
-          <template #default="{ row }">
-            <span style="display: flex;align-items: center;">
-              <span style="width:50%;">平均 {{ row.responseTimeAverage }} s</span>
-              <span style="width:50%;">最高 {{ row.responseTimeMax }} s</span>
-            </span>
-          </template>
-        </el-table-column>
-        <template #empty>
-          <div
-            class="empty-box"
-          >
-            <div class="title">
-              loophole is still empty
-            </div>
-          </div>
-        </template>
-      </el-table>
-      <el-pagination
-        :total="loopholeTotal"
-        :page-size="loopholeObj.pagesize"
-        :current-page="loopholeObj.page"
-        layout="prev, pager, next"
-        style="margin: 8px;display: flex;justify-content: end;"
-        @current-change="handleloopholePageChange"
-      />
-    </div>
-    <div class="two_photo">
-      <!-- <div class="two_table_title">
-        资源影响得分：<span>S</span>（95分）
-      </div> -->
-      <div class="two_photo_all">
-        <div class="two_photo_one">
-          <div class="two_photo_num_title">
-            CPU Usege
-            <!-- 得分：<span>B</span>（80分) -->
-          </div>
-          <div class="echartImg">
-            <trandCPU :data="cpuData" />
-          </div>
+          检测影响得分：<span>{{ allScores.level }}</span>（{{ allScores.score }}分）
         </div>
-        <div class="two_photo_two">
-          <div class="two_photo_num_title">
-            Memage Usege
-            <!-- 得分：<span>A</span>（80分） -->
-          </div>
-          <div class="echartImg">
-            <trandMemage :data="memData" />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="table_three"
-    >
-      <div class="select">
-        <div class="KeepCpu">
-          <span>
-            Keep CPU Usage over
-          </span>
-          <div class="baifenbi">
-            <el-input
-              v-model="cpuNum"
-              type="number"
-              @change="Changeload"
-            />%
-          </div>
-          <el-switch
-            v-model="cpuValue"
-            class="ml-2"
-            style="--el-switch-on-color: #13ce66;"
-            @change="Changeload"
-          />
-          <span>{{ cpuValue?'开启':'关闭' }}</span>
-        </div>
-        <div class="KeepCpu">
-          <span>
-            Keep Mem Usage over
-          </span>
-          <div class="baifenbi">
-            <el-input
-              v-model="memNum"
-              type="number"
-              @change="Changeload"
-            />%
-          </div>
-          <el-switch
-            v-model="memValue"
-            class="ml-2"
-            style="--el-switch-on-color: #13ce66;"
-            @change="Changeload"
-          />
-          <span>{{ memValue?'开启':'关闭' }}</span>
-        </div>
-      </div>
-      <div class="table">
         <el-table
-          :data="operationList"
+          id="tableId"
+          :data="loopholeList"
           min-height="calc(100% - 0.53rem)"
           width="100%"
           class="assets-grey-theme-table"
         >
           <el-table-column
-            prop="id"
-            label="ID"
-            :width="300"
+            prop="title"
+            label="漏洞名称"
+            :width="200"
             show-overflow-tooltip
           >
             <template #default="{ row, $index }">
               <span
                 class="name-input"
                 style="display: flex;align-items: center;cursor: pointer;"
+                @click="goSql(row)"
               >
                 <span
                   :id="'input'+$index"
                   class="id"
-                  style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
-                >{{ row.id }}</span>
+                  style="flex: 1;color:#169BD5;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+                >{{ row.name }}</span>
               </span>
             </template>
           </el-table-column>
           <el-table-column
             prop="url"
-            label="操作"
-            fit
+            label="漏洞地址"
+            :width="120"
           >
             <template #default="{ row }">
               <span
                 style="display: flex;align-items: center;"
               >
-                <span>{{ row.context }}</span>
+                <span :class="`Severity_${row.severity}`">{{ row.path }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="number"
+            label="请求次数"
+            :width="100"
+          >
+            <template #default="{ row }">
+              <span
+                style="display: flex; align-items: center;"
+              >
+                <span
+                  :style="row?.accessCount<100?'color: #171B23;':'color: #A30014;'"
+                >{{ row.accessCount }}</span>
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="url"
+            label="脏数据"
+            :width="180"
+          >
+            <template #default="{ row }">
+              <span
+                style="display: flex;align-items: center;"
+              >
+                <span style="width:40%;">新增 + {{ Math.floor(row.dirtyDataInsertCount/1000) }} </span>
+                <span style="width:40%;">误删 - {{ Math.floor(row.dirtyDataDeleteCount/1000) }}</span>
               </span>
             </template>
           </el-table-column>
 
           <el-table-column
             prop="date"
-            label="时间"
-            :width="300"
+            label="响应时间"
+            fit
           >
             <template #default="{ row }">
-              <span style="display: flex;align-items: center">
-                {{ enformatDate(row.timestamp) }}
+              <span style="display: flex;align-items: center;">
+                <span style="width:50%;">平均 {{ row.responseTimeAverage }} s</span>
+                <span style="width:50%;">最高 {{ row.responseTimeMax }} s</span>
               </span>
             </template>
           </el-table-column>
@@ -235,19 +98,160 @@
               class="empty-box"
             >
               <div class="title">
-                no Data
+                loophole is still empty
               </div>
             </div>
           </template>
         </el-table>
         <el-pagination
-          :total="operationTotal"
-          :page-size="operationObj.pagesize"
-          :current-page="operationObj.page"
+          :total="loopholeTotal"
+          :page-size="loopholeObj.pagesize"
+          :current-page="loopholeObj.page"
           layout="prev, pager, next"
           style="margin: 8px;display: flex;justify-content: end;"
-          @current-change="handleoperationPageChange"
+          @current-change="handleloopholePageChange"
         />
+      </div>
+    </div>
+    <div class="right">
+      <div class="two_photo">
+        <!-- <div class="two_table_title">
+          资源影响得分：<span>S</span>（95分）
+        </div> -->
+        <div class="two_photo_all">
+          <div class="two_photo_one">
+            <div class="two_photo_num_title">
+              CPU Usege
+              <!-- 得分：<span>B</span>（80分) -->
+            </div>
+            <div class="echartImg">
+              <trandCPU :data="cpuData" />
+            </div>
+          </div>
+          <div class="two_photo_two">
+            <div class="two_photo_num_title">
+              Memage Usege
+              <!-- 得分：<span>A</span>（80分） -->
+            </div>
+            <div class="echartImg">
+              <trandMemage :data="memData" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="table_three"
+      >
+        <div class="select">
+          <div class="KeepCpu">
+            <span>
+              Keep CPU Usage over
+            </span>
+            <div class="baifenbi">
+              <el-input
+                v-model="cpuNum"
+                type="number"
+                @change="Changeload"
+              />%
+            </div>
+            <el-switch
+              v-model="cpuValue"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66;"
+              @change="Changeload"
+            />
+            <span>{{ cpuValue?'开启':'关闭' }}</span>
+          </div>
+          <div class="KeepCpu">
+            <span>
+              Keep Mem Usage over
+            </span>
+            <div class="baifenbi">
+              <el-input
+                v-model="memNum"
+                type="number"
+                @change="Changeload"
+              />%
+            </div>
+            <el-switch
+              v-model="memValue"
+              class="ml-2"
+              style="--el-switch-on-color: #13ce66;"
+              @change="Changeload"
+            />
+            <span>{{ memValue?'开启':'关闭' }}</span>
+          </div>
+        </div>
+        <div class="table">
+          <el-table
+            :data="operationList"
+            min-height="calc(100% - 0.53rem)"
+            width="100%"
+            class="assets-grey-theme-table"
+          >
+            <el-table-column
+              prop="id"
+              label="ID"
+              :width="150"
+              show-overflow-tooltip
+            >
+              <template #default="{ row, $index }">
+                <span
+                  class="name-input"
+                  style="display: flex;align-items: center;cursor: pointer;"
+                >
+                  <span
+                    :id="'input'+$index"
+                    class="id"
+                    style="flex: 1;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;"
+                  >{{ row.id }}</span>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="url"
+              label="操作"
+              fit
+            >
+              <template #default="{ row }">
+                <span
+                  style="display: flex;align-items: center;"
+                >
+                  <span>{{ row.context }}</span>
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              prop="date"
+              label="时间"
+              :width="130"
+            >
+              <template #default="{ row }">
+                <span style="display: flex;align-items: center">
+                  {{ enformatDate(row.timestamp) }}
+                </span>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <div
+                class="empty-box"
+              >
+                <div class="title">
+                  no Data
+                </div>
+              </div>
+            </template>
+          </el-table>
+          <el-pagination
+            :total="operationTotal"
+            :page-size="operationObj.pagesize"
+            :current-page="operationObj.page"
+            layout="prev, pager, next"
+            style="margin: 8px;display: flex;justify-content: end;"
+            @current-change="handleoperationPageChange"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -293,7 +297,7 @@ const memNum = ref<any>(0)
 const loopholeList = ref<any>([])
 const loopholeTotal = ref<any>(0)
 const loopholeObj = reactive<any>({
-  pagesize: 10,
+  pagesize: 20,
   page: 1,
 })
 const operationList = ref<any>([])
@@ -515,12 +519,23 @@ onMounted(() => {
   <style scoped lang="scss">
   .content{
       display: flex;
-      flex-direction: column;
       width: 100%;
       margin: 0 auto;
-      max-width: 1200px;
+      padding: 16px;
+      // max-width: 1200px;
       margin-top: 24px;
       // padding:40px;
+      .left{
+        width: 60%;
+        padding: 10px;
+      }
+      .right{
+        display: flex;
+        flex-direction: column;
+        width: 40%;
+        padding-left: 10px;
+        border-left: 1px solid #ccc;
+      }
       .one_table{
         .one_table_title{
           font-weight: 600;
@@ -533,7 +548,6 @@ onMounted(() => {
         }
       }
       .two_photo{
-        margin-top: 24px;
         .two_table_title{
           font-weight: 600;
           font-size: 18px;
@@ -546,10 +560,12 @@ onMounted(() => {
         .two_photo_all{
           width:100%;
           display: flex;
+          flex-direction: column;
           gap: 16px;
+          height: 600px;
           >div{
             flex: 1;
-            height: 400px;
+            height: 300px;
             display: flex;
             flex-direction: column;
             .two_photo_num_title{
@@ -565,30 +581,33 @@ onMounted(() => {
             .echartImg{
               flex:1;
               width:100%;
-              padding: 16px;
+              padding: 16px 0;
               box-sizing: border-box;
             }
           }
         }
       }
       .table_three{
-        margin-top: 24px;
+        margin-top: 32px;
         margin-bottom: 24px;
         display: flex;
         flex-direction: column;
         gap: 16px;
         .select{
           display: flex;
+          flex-direction: column;
           align-items: center;
           padding:0 24px;
           gap: 16px;
           >div{
             flex: 1;
+            width: 100%;
           }
         }
         .KeepCpu{
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 16px;
           .baifenbi{
             border: 1px solid #ccc;
@@ -605,7 +624,7 @@ onMounted(() => {
                 border: none;
                 box-shadow: none;
                 height: 30px;
-                width: 60px;
+                width: 80px;
               }
             }
           }

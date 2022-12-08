@@ -27,7 +27,7 @@ export default defineConfig(({ mode }: UserConfig): UserConfig => {
           target: `${ASR_ENV.VITE_TARGET_HOST}`,
           changeOrigin: true,
           // secure: false, // 如果是https接口，需要配置这个参数
-          rewrite: (path) => path.replace(/^\/v1/, ''),
+          // rewrite: (path) => path.replace(/^\/v1/, ''),
         },
       },
     },

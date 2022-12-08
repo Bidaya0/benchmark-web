@@ -60,7 +60,7 @@ const randerEchart = async () => {
     grid: {
       left: '2%',
       right: '4%',
-      bottom: '8%',
+      bottom: '12%',
       top: '8%',
       containLabel: true,
     },
