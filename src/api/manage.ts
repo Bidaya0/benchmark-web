@@ -13,6 +13,8 @@ export const messageLogDisplay: requestModel = (params:any) => request.get(`/man
 export const messageLogcount: requestModel = (params:any) => request.get('/managerment/manage/log_count');
 // 修改状态 /managerment/manage/changeload
 export const messageChangeload: requestModel = (params:any) => request.post('/managerment/manage/changeload', params);
+// 渲染状态 /managerment/manage/load
+export const messageload: requestModel = (params:any) => request.get('/managerment/manage/load');
 
 // sql 2
 // list /vulforcheck/002/generateMessage

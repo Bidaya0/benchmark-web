@@ -21,7 +21,7 @@
           <el-table-column
             prop="title"
             label="漏洞名称"
-            :width="200"
+            :width="230"
             show-overflow-tooltip
           >
             <template #default="{ row, $index }">
@@ -41,7 +41,7 @@
           <el-table-column
             prop="url"
             label="漏洞地址"
-            :width="120"
+            :width="150"
           >
             <template #default="{ row }">
               <span
@@ -69,7 +69,7 @@
           <el-table-column
             prop="url"
             label="脏数据"
-            :width="180"
+            :width="230"
           >
             <template #default="{ row }">
               <span
@@ -151,7 +151,7 @@
               <el-input
                 v-model="cpuNum"
                 type="number"
-                @change="Changeload"
+                @change="Changeload_with_jie_liu"
               />%
             </div>
             <el-switch
@@ -170,7 +170,7 @@
               <el-input
                 v-model="memNum"
                 type="number"
-                @change="Changeload"
+                @change="Changeload_with_jie_liu"
               />%
             </div>
             <el-switch
@@ -192,7 +192,7 @@
             <el-table-column
               prop="id"
               label="ID"
-              :width="150"
+              :width="120"
               show-overflow-tooltip
             >
               <template #default="{ row, $index }">
@@ -259,19 +259,19 @@
 
 <script setup lang="ts">
 import {
-  onMounted, reactive, ref, markRaw,
+  onMounted, reactive, ref, markRaw, onUnmounted,
 } from 'vue' // introjs主题
 import { useRouter } from 'vue-router';
 import html2canvas from 'html2canvas';
 import JsPDF from 'jspdf';
 import {
   messageLogcount,
-  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload, testscores,
+  messageLogDisplay, messageMetric_display, messageVulList, messageVulListCount, messageChangeload, testscores, messageload,
 } from '@/api/manage';
 import trandCPU from '../components/trandCPU.vue'
 import trandMemage from '../components/trandMemage.vue'
 import {
-  enformatDate1, enformatDate, downloadPDF, handlePrint, outputPDF, downloadPDF1,
+  enformatDate1, enformatDate, formatDate, downloadPDF, handlePrint, outputPDF, downloadPDF1,
 } from '@/utils';
 // 引入插件
 
@@ -297,7 +297,7 @@ const memNum = ref<any>(0)
 const loopholeList = ref<any>([])
 const loopholeTotal = ref<any>(0)
 const loopholeObj = reactive<any>({
-  pagesize: 20,
+  pagesize: 50,
   page: 1,
 })
 const operationList = ref<any>([])
@@ -364,6 +364,16 @@ const getPhoto = async () => {
     YMData: data.selfInfo.map((item:any) => item.memoryUsage),
   } || {}
 }
+const timer = ref<any>(null)
+const Changeload_with_jie_liu = () => {
+  if (timer.value) {
+    return
+  }
+  timer.value = setTimeout(() => {
+    timer.value = null
+    Changeload()
+  }, 800)
+}
 const Changeload = async () => {
   const params:any = {
     cpuUsage: Number(cpuNum.value),
@@ -383,6 +393,16 @@ const gettestscores = async () => {
   const data = await testscores(params);
   // TODO
   allScores.value = data
+}
+const getMessageload = async () => {
+  const params:any = {
+  }
+  const data = await messageload(params);
+  // TODO
+  memValue.value = data.memoryLoadEnable
+  memNum.value = data.memoryUsage
+  cpuValue.value = data.cpuLoadEnable
+  cpuNum.value = data.cpuUsage
 }
 
 const exportPDF = () => {
@@ -505,6 +525,7 @@ const daYinprint = () => {
   //   document.body.removeChild(iframe);
   // }
 }
+const setInter = ref<any>()
 
 onMounted(() => {
   gettestscores()
@@ -513,6 +534,16 @@ onMounted(() => {
   getPhoto()
   getoperationList()
   getoperationListTotal()
+  getMessageload()
+  setInter.value = setInterval(() => {
+    getPhoto()
+  }, 5000)
+})
+onUnmounted(() => {
+// 轮询结束
+  if (setInter.value) {
+    clearInterval(setInter.value)
+  }
 })
 </script>
 
@@ -523,18 +554,18 @@ onMounted(() => {
       margin: 0 auto;
       padding: 16px;
       // max-width: 1200px;
-      margin-top: 24px;
+      // margin-top: 24px;
       // padding:40px;
       .left{
-        width: 60%;
+        width: 70%;
         padding: 10px;
       }
       .right{
         display: flex;
         flex-direction: column;
-        width: 40%;
+        width: 30%;
         padding-left: 10px;
-        border-left: 1px solid #ccc;
+        border-left: 1px solid #f0f0f0;
       }
       .one_table{
         .one_table_title{
@@ -612,19 +643,19 @@ onMounted(() => {
           .baifenbi{
             border: 1px solid #ccc;
             border-radius: 4px;
-            height: 32px;
+            height: 28px;
             display: flex;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 5px;
             :deep(.el-input){
               border: none;
               box-shadow: none;
-              height: 30px;
+              height: 24px;
               .el-input__wrapper{
                 border: none;
                 box-shadow: none;
-                height: 30px;
-                width: 80px;
+                height: 24px;
+                width: 60px;
               }
             }
           }

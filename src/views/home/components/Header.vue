@@ -88,7 +88,7 @@ header{
   box-shadow: inset 0px -1px 0px #f0f0f0;
   padding:0 124px;
   box-sizing: border-box;
-  height: 114px;
+  height: 84px;
   max-width: 100%;
   margin: 0 auto;
   font-family: 'Arial-BoldMT', 'Arial Bold', 'Arial', sans-serif;

@@ -4,12 +4,22 @@ import html2canvas from 'html2canvas';
 import JsPDF from 'jspdf';
 
 export const enformatDate = (time: number) => {
+  if ((`${time}`).length === 10) {
+    time *= 1000;
+  } else {
+    time = +time;
+  }
   const d = new Date(time);
   return moment(d).format('MM DD, YYYY')
 };
 export const enformatDate1 = (time: number) => {
+  if ((`${time}`).length === 10) {
+    time *= 1000;
+  } else {
+    time = +time;
+  }
   const d = new Date(time);
-  return moment(d).format('MM-DD')
+  return moment(d).format('m[m]:s[s]')
 };
 export const enformatTime = (time: number) => {
   const d = new Date(time);
