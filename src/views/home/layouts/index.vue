@@ -21,7 +21,7 @@
           <el-table-column
             prop="title"
             label="漏洞名称"
-            :width="230"
+            :min-width="230"
             show-overflow-tooltip
           >
             <template #default="{ row, $index }">
@@ -41,7 +41,7 @@
           <el-table-column
             prop="url"
             label="漏洞地址"
-            :width="150"
+            :min-width="150"
           >
             <template #default="{ row }">
               <span
@@ -54,7 +54,7 @@
           <el-table-column
             prop="number"
             label="请求次数"
-            :width="100"
+            :min-width="100"
           >
             <template #default="{ row }">
               <span
@@ -69,7 +69,7 @@
           <el-table-column
             prop="url"
             label="脏数据"
-            :width="230"
+            :min-width="230"
           >
             <template #default="{ row }">
               <span
@@ -84,6 +84,7 @@
           <el-table-column
             prop="date"
             label="响应时间"
+            :min-width="230"
             fit
           >
             <template #default="{ row }">
@@ -553,11 +554,14 @@ onUnmounted(() => {
       width: 100%;
       margin: 0 auto;
       padding: 16px;
+      overflow: auto;
       // max-width: 1200px;
       // margin-top: 24px;
       // padding:40px;
       .left{
         width: 70%;
+        min-width: 940px;
+        flex: 1;
         padding: 10px;
       }
       .right{

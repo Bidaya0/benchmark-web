@@ -9,7 +9,7 @@ import permission from '@/directive/permission'
 import 'element-plus/dist/index.css';
 import '@/assets/style/common.scss';
 import '@/assets/style/iconfont/iconfont.css';
-import './rem'
+// import './rem'
 import i18n from '@/config/lang'
 
 // export function createApp() {

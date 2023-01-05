@@ -10,7 +10,7 @@ export const enformatDate = (time: number) => {
     time = +time;
   }
   const d = new Date(time);
-  return moment(d).format('MM DD, YYYY')
+  return moment(d).format('YYYY MM DD')
 };
 export const enformatDate1 = (time: number) => {
   if ((`${time}`).length === 10) {
