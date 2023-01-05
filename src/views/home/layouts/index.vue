@@ -560,7 +560,7 @@ onUnmounted(() => {
       // padding:40px;
       .left{
         width: 70%;
-        min-width: 940px;
+        min-width: 960px;
         flex: 1;
         padding: 10px;
       }
