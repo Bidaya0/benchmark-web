@@ -20,7 +20,7 @@ export const messageload: requestModel = (params:any) => request.get('/managerme
 // list /vulforcheck/002/generateMessage
 export const generateMessage: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/dataDisplay?page=${params.page}&pageSize=${params.pageSize}`);
 // del
-export const logicExecMessage: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/logicExec?id=${params.id}`);
+export const logicExecMessage: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/logicExec`, {params});
 // list count
 export const dataDisplayCount: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/dataDisplayCount`);
 // /vulforcheck/002/generateMessage
@@ -35,7 +35,7 @@ export const dataDisplayCountMessage: requestModel = (params:any) => request.get
 // 生成内容 vulforcheck/001/generateMessage
 export const sqlMessage: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/generateMessage`);
 // save vulforcheck/001/logicExec
-export const sql1LogicExec: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/logicExec?title=${params.title}&context=${params.context}`);
+export const sql1LogicExec: requestModel = (params:any) => request.get(`/vulforcheck/${params.path}/logicExec`, {params});
 
 // 分数
 export const testscores: requestModel = (params:any) => request.get('/managerment/manage/testscores');

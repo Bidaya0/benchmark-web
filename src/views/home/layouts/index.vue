@@ -7,9 +7,14 @@
       <div class="one_table">
         <div
           class="one_table_title"
-          @click="daYinprint"
         >
           检测影响得分：<span>{{ allScores.level }}</span>（{{ allScores.score }}分）
+          <button
+          class="one_table_title"
+          @click="daYinprint"
+        >
+          导出报告
+          </button>
         </div>
         <el-table
           id="tableId"
@@ -75,8 +80,8 @@
               <span
                 style="display: flex;align-items: center;"
               >
-                <span style="width:40%;">新增 + {{ Math.floor(row.dirtyDataInsertCount/1000) }} </span>
-                <span style="width:40%;">误删 - {{ Math.floor(row.dirtyDataDeleteCount/1000) }}</span>
+                <span style="width:40%;">新增 + {{ row.dirtyDataInsertCount }} </span>
+                <span style="width:40%;">误删 - {{ row.dirtyDataDeleteCount }}</span>
               </span>
             </template>
           </el-table-column>
@@ -84,13 +89,13 @@
           <el-table-column
             prop="date"
             label="响应时间"
-            :min-width="230"
+            :min-width="230"  
             fit
           >
             <template #default="{ row }">
               <span style="display: flex;align-items: center;">
-                <span style="width:50%;">平均 {{ row.responseTimeAverage }} s</span>
-                <span style="width:50%;">最高 {{ row.responseTimeMax }} s</span>
+                <span style="width:50%;">平均 {{ row.responseTimeAverage/1000 }} s</span>
+                <span style="width:50%;">最高 {{ row.responseTimeMax/1000 }} s</span>
               </span>
             </template>
           </el-table-column>

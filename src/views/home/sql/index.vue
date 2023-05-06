@@ -15,7 +15,6 @@
         <span>标题：</span>
         <el-input
           v-model="title"
-          disabled
         />
       </div>
       <div class="content1">
@@ -24,7 +23,6 @@
           v-model="textarea"
           type="textarea"
           :autosize="{ minRows: 6, maxRows: 10 }"
-          disabled
         />
       </div>
       <div class="button_content">
@@ -319,11 +317,15 @@ const getGenerateMessageCount = async () => {
   operation2Total.value = data || 0
 }
 const sql2Del = async (row:any) => {
-  const params:any = {
+  var extraparams = {}
+  extraparams[(Math.random() + 1).toString(36).substring(7)] = (Math.random() + 1).toString(36).substring(7)
+  var params:any = {
     id: row.id,
     title: row.title,
     context: row.context,
     path: urlpath.value,
+    extra: (Math.random() + 1).toString(36).substring(7),
+    ...extraparams
   }
   const data = await logicExecMessage(params);
   // TODO 接口有问题 返回的是对象
@@ -379,10 +381,14 @@ const saveMessage = async () => {
   if (!title.value) {
     return
   }
+  var extraparams = {}
+  extraparams[(Math.random() + 1).toString(36).substring(7)] = (Math.random() + 1).toString(36).substring(7)
   const params:any = {
     title: title.value,
     context: textarea.value,
     path: urlpath.value,
+    extra: (Math.random() + 1).toString(36).substring(7),
+    ...extraparams
   }
   const data = await sql1LogicExec(params);
   ElMessage.success(data.context);
